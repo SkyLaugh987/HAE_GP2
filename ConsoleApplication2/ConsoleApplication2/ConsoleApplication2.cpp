@@ -18,6 +18,8 @@ int main()
 
 	printf("%s\n", "toto");
 	printf("%lli\n", 132456789);
+
+	std::cout << "123465789" << "\n";
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
