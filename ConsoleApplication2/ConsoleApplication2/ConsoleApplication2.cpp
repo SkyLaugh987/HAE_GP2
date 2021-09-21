@@ -4,9 +4,20 @@
 #include "pch.h"
 #include <iostream>
 
+
+
 int main()
 {
-    std::cout << "Hello World!\n"; 
+	printf("0\n");
+
+	int zero = 0;
+	printf("%i\n", zero);
+
+	float decimal = 0.5f;
+	printf("%f\n", decimal);
+
+	printf("%s\n", "toto");
+	printf("%lli\n", 132456789);
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
