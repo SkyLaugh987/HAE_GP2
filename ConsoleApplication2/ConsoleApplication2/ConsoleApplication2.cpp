@@ -3,8 +3,7 @@
 
 #include "pch.h"
 #include <iostream>
-
-
+#include "Toto.h"
 
 int main()
 {
@@ -20,6 +19,24 @@ int main()
 	printf("%lli\n", 132456789);
 
 	std::cout << "123465789" << "\n";
+}
+
+int main0()
+{
+	printf("0\n");
+
+	//allocation static
+	// L'instance est sur la pile /heap
+
+	Toto tStatic;
+	printf("%f\n", tStatic.x);
+	// garde pour plus tard
+	// allocation dynamique
+	//l'instance est sur le tas / heap
+
+	//Toto* tDynamic = new Toto();
+
+	return 0;
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
