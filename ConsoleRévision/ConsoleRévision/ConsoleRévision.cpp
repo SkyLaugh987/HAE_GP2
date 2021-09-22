@@ -3,13 +3,21 @@
 
 #include "pch.h"
 #include <iostream>
+#include "Tata.h"
 
-int main()
+/*int main0()
 {
 	printf("%i\n", 0);
 	printf("%f\n", 0.5);
 	printf("%s\n", "toto");
 	printf("%lli\n", 12345678910);
+}*/
+
+int main() {
+
+	Tata tStatic;
+	printf("%f\n", tStatic.x);
+	//printf("%s\n", "aaaaaaaaaaaah");
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage

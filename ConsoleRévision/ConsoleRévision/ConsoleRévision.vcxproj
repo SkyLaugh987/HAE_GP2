@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Tata.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleRévision.cpp" />
