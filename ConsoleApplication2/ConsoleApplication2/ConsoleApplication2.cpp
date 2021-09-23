@@ -131,7 +131,7 @@ struct Vec4 {
 
 //----------------------------------------------------------------- Exo IntArray----------------------------------------------
 
-int main() {
+/*int main() {
 
 	int* bobData = nullptr;
 
@@ -148,7 +148,56 @@ int main() {
 	//bob.set(20, 10);
 
 	return 0;
+}*/
+
+//-------------------------------------------------------------------CHAR------------------------------------------
+
+
+int Strlen(const char* maChaine) {
+
+	//declarer le resultat
+
+	// parcourir la chaine
+	while (true) {
+		//avancer mo,n index
+	}
+	//si on trouve le character == 0
+
+
 }
+int Countc(const char* maChaine, char c) {
+
+	
+	// renvoie le nombre d'occurence de c dans machaine 
+
+	// machaine est un tableau de char
+
+	// si l'element de l'idx courant = c 
+
+	// inc le resultat
+
+	// renvoyer le resultat
+
+	int res = 0;
+	int stringLength = strlen(maChaine);
+
+	for (int i = 0; i < (stringLength) ; i++) {
+		if ( maChaine[i] == c) {
+			res++;
+		}; 
+	}
+	return res;
+}
+
+int main() {
+
+	int nbA = Countc("sapin", 'a');
+	printf("%d", nbA);
+
+}
+
+
+
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
 // Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage
