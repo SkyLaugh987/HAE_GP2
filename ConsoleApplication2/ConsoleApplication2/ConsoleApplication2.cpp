@@ -4,6 +4,7 @@
 #include "pch.h"
 #include <iostream>
 #include "Toto.h"
+#include "IntArray.h"
 
 
 //--------------------------------------------- 1er exo --------------------------
@@ -80,6 +81,18 @@ struct Vec4 {
 		return res;
 	}
 
+	Vec4 add(float f) {
+
+		Vec4 res;
+
+		res.x = x +f;
+		res.y = y +f;
+		res.z = z +f;
+		res.w = w +f;
+
+		return res;
+	}
+
 	Vec4 div(Vec4 A) {
 
 		Vec4 res;
@@ -97,7 +110,19 @@ struct Vec4 {
 
 int main() {
 
-	Vec4* toto = new Vec4;
+	IntArray bob;
+
+	for (int i = 0; i < 10; i++) {
+		bob.set(i, i * i);
+	}
+	for (int i = 0; i < 10; i++) {
+		printf("%d\n", bob.get(i));
+	}
+	printf("\n");
+
+	return 0;
+
+	/*Vec4* toto = new Vec4;
 	Vec4* tata = new Vec4;
 
 	toto->x = 1;
@@ -112,7 +137,8 @@ int main() {
 
 	//Vec4 res = toto->add(*tata);
 	Vec4 res = toto->div(*tata);
-	printf("%f\n %f\n %f\n %f\n", res.x, res.y, res.z, res.w);
+	printf("%f\n %f\n %f\n %f\n", res.x, res.y, res.z, res.w);*/
+
 }
 
 
