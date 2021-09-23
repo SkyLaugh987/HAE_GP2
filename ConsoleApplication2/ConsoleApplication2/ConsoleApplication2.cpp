@@ -61,7 +61,7 @@ int main() {
 	(*toto).x = 69;
 	printf("%f %f %f", toto->x, toto->y, toto->z);
 };*/
-
+//-------------------------------------------------------------------------- Struct V4  fonction-------------------------
 struct Vec4 {
 
 	float x = 0;
@@ -108,21 +108,9 @@ struct Vec4 {
 
 };
 
-int main() {
+/*int main() {
 
-	IntArray bob;
-
-	for (int i = 0; i < 10; i++) {
-		bob.set(i, i * i);
-	}
-	for (int i = 0; i < 10; i++) {
-		printf("%d\n", bob.get(i));
-	}
-	printf("\n");
-
-	return 0;
-
-	/*Vec4* toto = new Vec4;
+	Vec4* toto = new Vec4;
 	Vec4* tata = new Vec4;
 
 	toto->x = 1;
@@ -137,11 +125,30 @@ int main() {
 
 	//Vec4 res = toto->add(*tata);
 	Vec4 res = toto->div(*tata);
-	printf("%f\n %f\n %f\n %f\n", res.x, res.y, res.z, res.w);*/
+	printf("%f\n %f\n %f\n %f\n", res.x, res.y, res.z, res.w);
+}*/
 
+
+//----------------------------------------------------------------- Exo IntArray----------------------------------------------
+
+int main() {
+
+	int* bobData = nullptr;
+
+	IntArray bob(10);
+
+	for (int i = 0; i < 10; i++) {
+		bob.set(i, i * i);
+	}
+	for (int i = 0; i < 10; i++) {
+		printf("%d ", bob.get(i));
+	}
+	printf("\n");
+
+	//bob.set(20, 10);
+
+	return 0;
 }
-
-
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
 // Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage
