@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Toto.h"
 #include "IntArray.h"
+#include "LinkedList.h"
 
 
 //--------------------------------------------- 1er exo --------------------------
@@ -213,7 +214,7 @@ void Strncpy(char * Copy, const char * Origin, int nchars) {
 }
 
 int main() {
-	//int nbB = Strlen("sapin");
+	/*//int nbB = Strlen("sapin");
 	//int nbA = Countc("sapin", 'a');
 	char oui[4] = "oui";
 	char non[4] = " ";
@@ -226,5 +227,13 @@ int main() {
 	printf("%s\n", oui);
 	printf("%s", non);
 
-	return 0;
+	return 0;*/
+
+	LinkedList myList;
+	myList.Add(14);
+	myList.Add(18);
+	myList.Add(18);
+	myList.Add(18);
+	myList.PrintList();
+	
 };
