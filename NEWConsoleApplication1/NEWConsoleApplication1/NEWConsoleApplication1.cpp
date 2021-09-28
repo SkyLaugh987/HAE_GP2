@@ -195,9 +195,36 @@ int Countc(const char* maChaine, char c) {
 	return res;
 }
 
-int main() {
-	int nbB = Strlen("sapin");
-	int nbA = Countc("sapin", 'a');
-	printf("%d\n", nbA);
-	printf("%d", nbB);
+void Strcpy(char * Copy, const char* Origin) {
+
+	int OriginLength = Strlen(Origin);
+
+	for (int i = 0; i <= (OriginLength); i++) {
+		Copy[i] = Origin[i];
+	}
+
 }
+
+void Strncpy(char * Copy, const char * Origin, int nchars) {
+
+	for (int i = 0; i < nchars; i++) {
+		Copy[i] = Origin[i];
+	}
+}
+
+int main() {
+	//int nbB = Strlen("sapin");
+	//int nbA = Countc("sapin", 'a');
+	char oui[4] = "oui";
+	char non[4] = " ";
+	int o = 2;
+	//Strcpy(non, oui);
+	Strncpy(non, oui, o);
+	//printf("%d\n", nbA);
+	//printf("%d\n", nbB);
+
+	printf("%s\n", oui);
+	printf("%s", non);
+
+	return 0;
+};
