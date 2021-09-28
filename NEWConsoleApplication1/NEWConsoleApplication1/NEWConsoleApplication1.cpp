@@ -156,12 +156,18 @@ struct Vec4 {
 int Strlen(const char* maChaine) {
 
 	//declarer le resultat
-
+	
 	// parcourir la chaine
-	while (true) {
-		//avancer mo,n index
-	}
-	//si on trouve le character == 0
+	int i = 0;
+		while (maChaine[i] != 0) {
+			//avancer mo,n index
+			i++;
+		}
+		//si on trouve le character == 0
+		
+		return i;
+	
+
 
 
 }
@@ -190,8 +196,8 @@ int Countc(const char* maChaine, char c) {
 }
 
 int main() {
-
+	int nbB = Strlen("sapin");
 	int nbA = Countc("sapin", 'a');
-	printf("%d", nbA);
-
+	printf("%d\n", nbA);
+	printf("%d", nbB);
 }
