@@ -228,12 +228,23 @@ int main() {
 	printf("%s", non);
 
 	return 0;*/
-
 	LinkedList myList;
-	myList.Add(14);
-	myList.Add(18);
-	myList.Add(18);
-	myList.Add(18);
+	
+	myList.AddFront(10);
+	myList.AddLast(14);
+	myList.AddLast(16);
+	myList.AddLast(18);
+	myList.AddFront(9);
+	/*myList.AddLast(14);
+	myList.AddLast(16);
+	myList.AddLast(19);
+	myList.AddLast(20);
+	myList.RemoveLast(head);*/
+	myList.RemoveFirst();
+	myList.RemoveLast();
+	myList.Insert(20, 3);
+	myList.Insert(15, 2);
+	myList.RemoveAll();
 	myList.PrintList();
 	
 };
