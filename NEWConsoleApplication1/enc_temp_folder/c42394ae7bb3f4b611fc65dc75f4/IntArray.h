@@ -73,7 +73,7 @@ public:
 		}
 
 		void qsort() {
-			
+
 		}
 
 	~IntArray() {

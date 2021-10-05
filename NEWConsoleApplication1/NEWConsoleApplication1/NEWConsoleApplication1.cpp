@@ -2,7 +2,9 @@
 //
 
 #include "pch.h"
-#include <iostream>
+//#include <iostream>
+#include <cstring>
+#include <cstdio>
 #include "Toto.h"
 #include "IntArray.h"
 #include "LinkedList.h"
@@ -171,7 +173,7 @@ int Strlen(const char* maChaine) {
 
 
 
-}
+};
 int Countc(const char* maChaine, char c) {
 
 
@@ -194,7 +196,7 @@ int Countc(const char* maChaine, char c) {
 		};
 	}
 	return res;
-}
+};
 
 void Strcpy(char * Copy, const char* Origin) {
 
@@ -206,29 +208,62 @@ void Strcpy(char * Copy, const char* Origin) {
 
 }
 
-void Strncpy(char * Copy, const char * Origin, int nchars) {
-
-	for (int i = 0; i < nchars; i++) {
-		Copy[i] = Origin[i];
+void StrcpyFast(char * Copy, const char* Origin) {
+	while (*Origin) {
+		*Copy = *Origin;
+		Copy++;
+		Origin++;
 	}
+	Origin = 0;	
+}
+
+
+void Strncpy(char * Copy, const char * Origin, int nchars) {
+	/*while (*Origin <= nchars || *Origin) {
+		*Copy = *Origin;
+		Copy++;
+		Origin++;
+	}*/
+	while (nchars-- && *Origin) {
+		*Copy = *Origin;
+		Copy++;
+		Origin++;
+	}
+	*Copy = 0;
+
+	/*for (int i = 0; i < nchars; i++) {
+		Copy[i] = Origin[i];
+	}*/
 }
 
 int main() {
-	/*//int nbB = Strlen("sapin");
+	IntArray tab(10);
+	tab.set(11, 10);
+	tab.Insert(20);
+	tab.InsertAt(10, 30);
+	int stop = 0;
+	/*printf("%d\n", tab.get(9));
+	printf("%d\n", tab.get(10));
+	printf("%d\n", tab.get(11));*/
+	//--------------------------------------- STR----------------------------------
+	//int nbB = Strlen("sapin");
 	//int nbA = Countc("sapin", 'a');
-	char oui[4] = "oui";
-	char non[4] = " ";
-	int o = 2;
+	//char oui[4] = "oui";
+	//char non[4] = " ";
+	//int idx = 2;
 	//Strcpy(non, oui);
-	Strncpy(non, oui, o);
+	//Strncpy(non, oui, idx);
 	//printf("%d\n", nbA);
 	//printf("%d\n", nbB);
 
-	printf("%s\n", oui);
-	printf("%s", non);
+	//printf("%s\n", oui);
+	//printf("%s", non);
+	
 
-	return 0;*/
-	LinkedList myList;
+	//return 0;
+	//------------------------------------LinkedList--------------------------------
+
+	/*LinkedList myList;
 	
 	myList.AddFront(10);
 	myList.AddLast(14);
@@ -239,12 +274,12 @@ int main() {
 	myList.AddLast(16);
 	myList.AddLast(19);
 	myList.AddLast(20);
-	myList.RemoveLast(head);*/
+	myList.RemoveLast(head);
 	myList.RemoveFirst();
 	myList.RemoveLast();
 	myList.Insert(20, 3);
 	myList.Insert(15, 2);
 	myList.RemoveAll();
-	myList.PrintList();
+	myList.PrintList();*/
 	
 };
