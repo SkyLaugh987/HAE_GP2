@@ -72,8 +72,12 @@ public:
 			
 		}
 
+		static int cmp(const void * v0, const void * v1) {
+			return *(int*)v1 - *(int*)v0;
+		}
+
 		void qsort() {
-			
+			::qsort(data, size, sizeof(int), cmp);
 		}
 
 	~IntArray() {

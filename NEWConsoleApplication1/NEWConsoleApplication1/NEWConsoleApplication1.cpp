@@ -241,6 +241,7 @@ int main() {
 	tab.set(11, 10);
 	tab.Insert(20);
 	tab.InsertAt(10, 30);
+	tab.qsort();
 	int stop = 0;
 	/*printf("%d\n", tab.get(9));
 	printf("%d\n", tab.get(10));
