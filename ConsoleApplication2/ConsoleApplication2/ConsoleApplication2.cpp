@@ -4,8 +4,9 @@
 #include "pch.h"
 #include <iostream>
 #include "Toto.h"
-#include "IntArray.h"
+//#include "IntArray.h"
 #include"DavidLinkedList.h"
+#include"IntTree.h"
 
 
 //--------------------------------------------- 1er exo --------------------------
@@ -199,7 +200,7 @@ int main() {
 //--------------------------------------LinkedList avec David----------------------------
 
 int main() {
-	Intlist* tata = (Intlist*)malloc(sizeof(Intlist*));
+	/*Intlist* tata = (Intlist*)malloc(sizeof(Intlist*));
 	tata->data = 70;
 	tata->next = nullptr;
 
@@ -216,7 +217,30 @@ int main() {
 	t2 = appendLast(t2, 82);
 	t2 = remove(t2, 77);
 	t2 = remove(t2, 79);
-	return 0;
+	return 0;*/
+	IntTree* toto = create(66);
+	if(count(0) != 0)throw"alarm?";
+	if (count(toto) != 1)throw"alarm?";
+	insert(toto, 20);
+	insert(toto, 77);
+	insert(toto, 50);
+	insert(toto, 69);
+
+	IntTree* h = insert(nullptr, 2);
+	h = insert(h, 66);
+	h = insert(h, 75);
+	h = insert(h, 79);
+
+	IntTree* z = insert(nullptr, 1);
+	z = insert(z, -5);
+	z = insert(z, 5);
+	z = insert(z, 6);
+	z = insert(z, 15);
+
+	IntTree* zh = merge(z, h);
+	IntTree* zr = remove(zh, 1);
+	zr = remove(zr, -5);
+
 }
 
 
