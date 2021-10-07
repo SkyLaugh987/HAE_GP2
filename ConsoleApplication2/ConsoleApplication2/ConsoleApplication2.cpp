@@ -35,33 +35,33 @@
 		//afficher c  incremente c et prend le contenu
 
 		//printf("%d\n", (*c)++);
-		//prend le contenu de c et incrémente le 
+		//prend le contenu de c et incrémente le
 
 		//printf("%d\n", *++c);
-		// incremente c et prend le contenu 
+		// incremente c et prend le contenu
 
 		//printf("%d\n", ++*c);
-		// prend le contenu de c et incremente le 
+		// prend le contenu de c et incremente le
 	}*/
 
 
-//--------------------------------------------------------------- Struct manipulation Pointeur  exple-------------------------------------------
-/*struct Vec {
+	//--------------------------------------------------------------- Struct manipulation Pointeur  exple-------------------------------------------
+	/*struct Vec {
 
-	float x = 0;
-	float y = 0;
-	float z = 0;
-};
+		float x = 0;
+		float y = 0;
+		float z = 0;
+	};
 
-int main() {
-	//Vec toto;
+	int main() {
+		//Vec toto;
 
-	Vec* toto = new Vec();
-	toto->y = 67;
-	(*toto).x = 69;
-	printf("%f %f %f", toto->x, toto->y, toto->z);
-};*/
-//-------------------------------------------------------------------------- Struct V4  fonction-------------------------
+		Vec* toto = new Vec();
+		toto->y = 67;
+		(*toto).x = 69;
+		printf("%f %f %f", toto->x, toto->y, toto->z);
+	};*/
+	//-------------------------------------------------------------------------- Struct V4  fonction-------------------------
 struct Vec4 {
 
 	float x = 0;
@@ -69,7 +69,7 @@ struct Vec4 {
 	float z = 0;
 	float w = 0;
 
-	Vec4 add(Vec4 A ) {
+	Vec4 add(Vec4 A) {
 
 		Vec4 res;
 
@@ -77,7 +77,7 @@ struct Vec4 {
 		res.y = y + A.y;
 		res.z = z + A.z;
 		res.w = w + A.w;
-		
+
 		return res;
 	}
 
@@ -85,10 +85,10 @@ struct Vec4 {
 
 		Vec4 res;
 
-		res.x = x +f;
-		res.y = y +f;
-		res.z = z +f;
-		res.w = w +f;
+		res.x = x + f;
+		res.y = y + f;
+		res.z = z + f;
+		res.w = w + f;
 
 		return res;
 	}
@@ -167,7 +167,7 @@ int Strlen(const char* maChaine) {
 }
 int Countc(const char* maChaine, char c) {
 
-	
+
 	// renvoie le nombre d'occurence de c dans machaine 
 
 	// machaine est un tableau de char
@@ -181,10 +181,10 @@ int Countc(const char* maChaine, char c) {
 	int res = 0;
 	int stringLength = strlen(maChaine);
 
-	for (int i = 0; i < (stringLength) ; i++) {
-		if ( maChaine[i] == c) {
+	for (int i = 0; i < (stringLength); i++) {
+		if (maChaine[i] == c) {
 			res++;
-		}; 
+		};
 	}
 	return res;
 }
