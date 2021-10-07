@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Toto.h"
 #include "IntArray.h"
+#include"DavidLinkedList.h"
 
 
 //--------------------------------------------- 1er exo --------------------------
@@ -152,7 +153,7 @@ struct Vec4 {
 
 //-------------------------------------------------------------------CHAR------------------------------------------
 
-
+/*
 int Strlen(const char* maChaine) {
 
 	//declarer le resultat
@@ -187,25 +188,36 @@ int Countc(const char* maChaine, char c) {
 		};
 	}
 	return res;
-}
-
+}*/
+/*
 int main() {
 
 	int nbA = Countc("sapin", 'a');
 	printf("%d", nbA);
 
+}*/
+//--------------------------------------LinkedList avec David----------------------------
+
+int main() {
+	Intlist* tata = (Intlist*)malloc(sizeof(Intlist*));
+	tata->data = 70;
+	tata->next = nullptr;
+
+	if (length(tata) != 1) throw"alarm?";
+	if (length(0) != 0) throw"alarm?";
+
+	tata = appendFirst(tata, 66);
+	
+	Intlist* t0 = appendLast(nullptr, 77);
+	Intlist* t1 = appendLast(t0, 78);
+	Intlist* t2 = appendLast(t1, 79);
+	t2 = appendLast(t2, 80);
+	t2 = appendLast(t2, 81);
+	t2 = appendLast(t2, 82);
+	t2 = remove(t2, 77);
+	t2 = remove(t2, 79);
+	return 0;
 }
 
 
 
-
-// Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
-// Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage
-
-// Conseils pour bien démarrer : 
-//   1. Utilisez la fenêtre Explorateur de solutions pour ajouter des fichiers et les gérer.
-//   2. Utilisez la fenêtre Team Explorer pour vous connecter au contrôle de code source.
-//   3. Utilisez la fenêtre Sortie pour voir la sortie de la génération et d'autres messages.
-//   4. Utilisez la fenêtre Liste d'erreurs pour voir les erreurs.
-//   5. Accédez à Projet > Ajouter un nouvel élément pour créer des fichiers de code, ou à Projet > Ajouter un élément existant pour ajouter des fichiers de code existants au projet.
-//   6. Pour rouvrir ce projet plus tard, accédez à Fichier > Ouvrir > Projet et sélectionnez le fichier .sln.
