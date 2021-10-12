@@ -152,11 +152,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="IntArray.h" />
+    <ClInclude Include="IntTree.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Tata.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleRévision.cpp" />
+    <ClCompile Include="IntTree.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
