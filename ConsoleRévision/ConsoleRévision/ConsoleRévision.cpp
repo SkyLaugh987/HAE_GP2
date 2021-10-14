@@ -2,8 +2,11 @@
 //
 
 #include "pch.h"
-#include <iostream>
-#include "Tata.h"
+#include <cstring>
+#include <cstdio>
+
+#include "IntArray.h"
+
 
 //#include "IntArray.h"
 
@@ -190,9 +193,13 @@ int Countc(const char* maChaine, char c) {
 	return res;
 }
 
-int main() {
 
-	int nbA = Countc("sapin", 'a');
-	printf("%d", nbA);
+int main() {
+	IntArray tab(10);
+	tab.set(11, 10);
+	tab.Insert(20);
+	tab.InsertAt(10, 30);
+	tab.qsort();
+	int stop = 0;
 
 }

@@ -1,33 +1,33 @@
 #include"IntTree.h"
-IntTree* create(int value) {
-	
-	IntTree* node = (IntTree*)malloc(sizeof(IntTree));
+IntTreeRevision* create(int value) {
+
+	IntTreeRevision* node = (IntTreeRevision*)malloc(sizeof(IntTreeRevision));
 	node->value = value;
 	node->left = node->right = nullptr;
 	return node;
 }
 
-int count(IntTree* head) {
-	
-	if(!head) return 0;
+int count(IntTreeRevision* head) {
+
+	if (!head) return 0;
 	return 1 + count(head->left) + count(head->right);
 }
 
-IntTree* insert(IntTree* head, int val) {
+IntTreeRevision* insert(IntTreeRevision* head, int val) {
 	if (!head) return create(val);
-	
-	if (head->value > val) 
-		head->left =  insert(head->left, val);
+
+	if (head->value > val)
+		head->left = insert(head->left, val);
 	else
 		head->right = insert(head->right, val);
 	return head;
 }
 
-IntTree* remove(IntTree* head, int val) {
+IntTreeRevision* remove(IntTreeRevision* head, int val) {
 	if (!head) return head;
-	
+
 	if (head->value == val) {
-		IntTree* merged = merge(head->left, head->right);
+		IntTreeRevision* merged = merge(head->left, head->right);
 	}
 	else {
 		head->left = remove(head->left, val);
@@ -35,12 +35,12 @@ IntTree* remove(IntTree* head, int val) {
 	}
 	return head;
 }
-IntTree* merge(IntTree* a, IntTree* b) {
+IntTreeRevision* merge(IntTreeRevision* a, IntTreeRevision* b) {
 	if (!a)return b;
 	if (!b)return a;
 
-	IntTree* left = a->left;
-	IntTree* right = a->right;
+	IntTreeRevision* left = a->left;
+	IntTreeRevision* right = a->right;
 	int value = a->value;
 	free(a);
 
