@@ -50,12 +50,13 @@ const char * StrStr(const char * a, const char* b) {
 	return nullptr;
 }
 
-int add(int a, int b) {
-	if (b == 0) return a;
+int add(int a, int b) { //avec que des +1,-1, return, apppels recursifs{
+	if (b == 0)
+		return a;
 	else if (b > 0)
 		return 1 + add(a, b - 1);
 	else
-		return -1 + add(a, b - 1);
+		return -1 + add(a, b + 1);
 }
 
 int sub(int a, int b) {
