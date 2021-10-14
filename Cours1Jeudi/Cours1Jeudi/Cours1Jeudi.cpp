@@ -72,17 +72,13 @@ int mul(int a, int b) {
 		return  add(a, mul(a, b - 1));
 }
 int divInt(int a, int b) {
+
 	if (a == 0) return 0;
-	if (b == 0)
-		throw "interdit";
 	if (b == 1) return a;
-	if (a < b) return 0;
-	if (a < 0)
-		return sub(0, divInt(sub(0, a), b));
-	else
-		return 1 + divInt(sub(a, b), b);
-
-
+	if (b == 0) throw "division by zero";
+	if (a < 0)  return sub(0, divInt(sub(0, a), b));
+	if (a < b)  return 0;
+	return 1 + divInt(sub(a, b), b);
 }
 
 int mod(int a, int b);// rest de div
