@@ -4,6 +4,7 @@
 #include <cstring>
 #include <functional>
 
+
 //#define MALLOC_VERSION
 class IntArray {
 public:
@@ -45,7 +46,10 @@ public:
 	void set(int idx, int value);
 
 	void resize(int newSize);
+	void insert(int value);
+	void insertAt(int idx, int value);
 	void qsort();
+	void insertAtMove(int idx, int value);
 
 	int get(int idx);
 

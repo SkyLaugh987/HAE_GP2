@@ -1,4 +1,4 @@
-#include "IntArray.h"
+#include "IntArray.hpp"
 #include <utility>
 #include <cstdlib>
 #undef max
@@ -42,6 +42,24 @@ void IntArray::resize(int newSize) {
 	//délivrer la memoire si besoin
 }
 
+void IntArray::insert(int value) {
+	int idx = 0;
+	while ((idx < size) && (data[idx] < value))
+		idx++;
+	insertAt(idx, value);
+}
+
+void IntArray::insertAt(int idx, int value) {
+	using namespace std;
+
+	int sz = size;
+	resize(max(idx + 1, size + 1));
+	//resize(max(idx + 1, size + 1));
+
+	for (; sz > idx; sz--)
+		data[sz] = data[sz - 1];
+	data[idx] = value;
+}
 
 static int cmp(const void * v0, const void * v1) {
 	return *(int*)v0 - *(int*)v1;
@@ -51,6 +69,12 @@ void IntArray::qsort() {
 	::qsort(data, size, sizeof(int), cmp);
 }
 
+void IntArray::insertAtMove(int idx, int value) {
+	int sz = size;
+	resize(std::max<int>(idx + 1, size + 1));
+	memmove(&data[idx + 1], &data[idx], (sz - idx) * sizeof(int));
+	data[idx] = value;
+}
 
 int IntArray::get(int idx) {
 	//si idx est hors des bornes du tableau 
@@ -105,17 +129,15 @@ double IntArray::sumCapture() {
 	return res;
 }
 
+
 IntArray* IntArray::fromArray(int* data, int len)
 {
-	// allouer un nouveau intarray*
-	IntArray * copy = new IntArray(len);
-	// copier les données dans la nouvelle instance
-	for (size_t i = 0; i < len; i++)
-	{
-		copy->set(i, data[i]);
-	}
-	// renvoyer cette copie
-	return copy;
+	//allouer un nouveau IntArray*
+	IntArray* copy = new IntArray(len);
 
-	return nullptr;
+	// copier les données dans la nouvelle instance
+	memcpy(copy->data, data, len * sizeof(int));
+
+	//renvoyer cette copie
+	return copy;
 }
