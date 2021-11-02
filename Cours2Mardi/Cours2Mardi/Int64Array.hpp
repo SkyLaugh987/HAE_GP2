@@ -25,20 +25,14 @@ class Int64Array {
 			//memset(data, 0, 70000 * sizeof(int64_t));
 		}
 
-		void zero(int idx, int nb) {
-			if (idx >= nb) return;
-			
-			else {
-				data[idx] = 0;
-				zero(idx + 1, nb);
-			}
-		}
+		void zero(int idx, int nb);
 
 		void ensure(int size);
 		void set_unsafe(int pos, int64_t);
 		void set(int pos, int64_t elem);
 		void push_back(int64_t elem);
 		void push_front(int64_t elem);
+
 		int64_t& get(int pos) {
 			ensure(pos + 1);
 			if (pos >= curSize)
@@ -49,9 +43,29 @@ class Int64Array {
 		int64_t& operator[](int idx) {
 			return get(idx);
 		}
-		void insert(int pos, int64_t elem) {
 
+		void insert(int pos, int64_t elem);
+		void insert_ordered(int64_t elem);
+		void append_sorted(const int64_t* arr, int sz);
+		static void insertion_sort(int64_t* arr, int sz);
+		void load(const int64_t* arr, int sz);
+
+		~Int64Array() {
+			delete(data);
+			data = nullptr;
+			maxSize = 0;
+			curSize = 0;
 		}
-		void shiftRight(int pos);
+		
+protected :
 
+		void shiftRight(int pos);
+		void shift_from_to(int end, int cur);
+		int searchPos(int pos, int64_t elem);
+		void clear() {
+			curSize = 0;
+		}
+		static void swap( int64_t* a, int64_t* b);
+
+		
 };
