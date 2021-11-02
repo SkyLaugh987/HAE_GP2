@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{CAB98806-CB67-4266-89B6-6E75B6F924A2}</ProjectGuid>
+    <ProjectGuid>{655B064D-A9F0-47BF-AB81-7C5E5A86EFEB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Cours2Mardi</RootNamespace>
+    <RootNamespace>Cours3</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -151,13 +151,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Int64Array.hpp" />
+    <ClInclude Include="List.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="tools.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Cours2Mardi.cpp" />
-    <ClCompile Include="Int64Array.cpp" />
+    <ClCompile Include="Cours3.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

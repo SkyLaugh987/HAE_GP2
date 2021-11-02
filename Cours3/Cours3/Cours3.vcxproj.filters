@@ -18,10 +18,10 @@
     <ClInclude Include="pch.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Int64Array.hpp">
+    <ClInclude Include="tools.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="tools.hpp">
+    <ClInclude Include="List.hpp">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -29,10 +29,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Cours2Mardi.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Int64Array.cpp">
+    <ClCompile Include="Cours3.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
