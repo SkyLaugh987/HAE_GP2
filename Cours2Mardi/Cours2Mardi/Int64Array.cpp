@@ -103,5 +103,41 @@ void Int64Array::swap(int64_t * a, int64_t * b) {
 	*b = tmp;
 }
 
+int Int64Array::bsearch(int64_t elem) {
+	return _bsearch(elem, 0, curSize - 1);
+}
+
+int Int64Array::_bsearch(int64_t elem, int lo, int  hi) {
+	if (hi < lo) return -1;
+
+	if (elem == data[lo]) return lo;
+	if (elem == data[hi]) return hi;
+	int mid = (lo + hi) >> 1;          // c la moitié
+	if (elem == data[mid]) return mid;
+
+	if (elem <= (data[hi])) return _bsearch(elem, lo + 1, mid - 1);
+	else return _bsearch(elem, mid + 1 , hi - 1);
+	
+}
+
+int Int64Array::_bsearchIter(int64_t elem, int lo, int hi) {
+	int lo = 0;
+	int hi = curSize;
+	if (lo >= hi) return -1;
+	if (elem == data[lo]) return lo;
+	if (elem == data[hi]) return hi;
+	int mid = (lo + hi) >> 1;
+	while (lo <= hi) {
+		if (elem == data[mid]) return mid;
+		if (elem >= data[mid]) {
+
+		}
+		if (elem <= data[mid]) {
+
+		}
+	}
+
+}
+
 
 

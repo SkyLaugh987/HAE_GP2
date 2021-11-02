@@ -50,6 +50,11 @@ class Int64Array {
 		static void insertion_sort(int64_t* arr, int sz);
 		void load(const int64_t* arr, int sz);
 
+		int bsearch(int64_t elem);
+		int _bsearch(int64_t elem, int lo, int hi);
+		int _bsearchIter(int64_t elem, int lo, int hi);
+
+
 		~Int64Array() {
 			delete(data);
 			data = nullptr;

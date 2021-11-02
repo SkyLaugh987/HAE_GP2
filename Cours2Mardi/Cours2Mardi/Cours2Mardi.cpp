@@ -116,10 +116,12 @@ int main()
 	//srand(0);
 	Int64Array ti4;
 	double t0 = getTimeStamp();
+
 	for (size_t i = 0; i < 1000000; i++)
 	{
 		ti4.push_back(rand() % 135479658);
 	}
+
 	double t1 = getTimeStamp();
 	printf("time elapsed %11f s\n", (t1 - t0));
 
@@ -131,6 +133,19 @@ int main()
 
 	}
 	double t3 = getTimeStamp();
-	printf("time elapsed %11f s", (t3 - t2));
+	printf("time elapsed %11f s\n", (t3 - t2));
+
+
+	Int64Array ti6;
+	for (size_t i = 0; i < 1000; i++)
+	{
+		ti6.push_front(i);
+	}
+	double t4 = getTimeStamp();
+
+	int idx1 = ti6.bsearch(335);
+
+	double t5 = getTimeStamp();
+	printf("time elpsed %11f s\n", (t5 - t4));
 	return 0;
 }
