@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="tools.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Cours4Jeudi.rc" />
