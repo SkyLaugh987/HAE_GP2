@@ -65,7 +65,7 @@ int main()
         float dx = canonPos.x - mousepos.x;
         float dy = canonPos.y - mousepos.y;
 
-        float rotation = (atan2(dy, dx)) * 180 / PI;
+        float rotation = (atan2(dy, dx)) * 180;
         canon.setRotation(rotation);
 
         window.clear();
