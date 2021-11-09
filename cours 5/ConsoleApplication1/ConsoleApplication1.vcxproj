@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Bullet.hpp" />
     <ClInclude Include="Curve.hpp" />
+    <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Int64Array.hpp" />
     <ClInclude Include="List.hpp" />
     <ClInclude Include="Tool.hpp" />
