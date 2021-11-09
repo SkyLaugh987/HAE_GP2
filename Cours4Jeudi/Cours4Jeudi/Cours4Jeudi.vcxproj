@@ -150,8 +150,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Cours4Jeudi.cpp" />
+    <ClCompile Include="Projectile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Projectile.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="tools.hpp" />
   </ItemGroup>
