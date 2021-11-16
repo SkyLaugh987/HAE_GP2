@@ -12,8 +12,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Main.hpp>
 #include <SFML/Window.hpp>
+
 #include "Curve.hpp"
 #include "Bullet.hpp"
+#include "Entity.hpp"
+#include "World.hpp"
 
 float catmull(float p0 , float p1 , float p2,float p3 , float t ) {
 	auto q = 2.0f * p1;
@@ -25,7 +28,7 @@ float catmull(float p0 , float p1 , float p2,float p3 , float t ) {
 
 	return 0.5f * q;
 }
-
+// -----------------------------------------------------Moutain-----------------------------------
 void drawMountain(sf::RenderWindow& window) {
 
 	sf::VertexArray arr;
@@ -62,11 +65,11 @@ void drawMountain(sf::RenderWindow& window) {
 	}
 	window.draw(arr);
 }
-
+//----------------------------------------------------------------------Ground----------------------------------------------------
 void drawGround(sf::RenderWindow& window) {
 	sf::VertexArray arr;
 	arr.setPrimitiveType(sf::LineStrip);
-	sf::Color col = sf::Color::Yellow;
+	sf::Color col = sf::Color::Red;
 
 	float baseline = 600+60;
 
@@ -81,18 +84,29 @@ void drawGround(sf::RenderWindow& window) {
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML works!");
+	float ScreenWidth = 600;
+	float ScreenHeight = 720;
+
+	sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "SFML works!");
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
-	sf::RectangleShape shape(sf::Vector2f(25,60));
-	shape.setFillColor(sf::Color::Green);
-	shape.setPosition(800, 600);
 
-	sf::RectangleShape gun(sf::Vector2f(8, 32));
+	sf::RectangleShape* player = new sf::RectangleShape(sf::Vector2f(200, 20));
+	player->setFillColor(sf::Color::Green);
+	player->setPosition(300, 600);
+	player->setOrigin(100, 0);
+	sf::FloatRect nextPos;
+
+	// Wall
+	sf::RectangleShape wall;
+
+	////////// GUN /////////////
+	/*sf::RectangleShape gun(sf::Vector2f(8, 32));
 	gun.setFillColor(sf::Color(	0xFF,0x00,0x00));
 	gun.setOrigin(4,0);
-	gun.setPosition(800, 600);
+	gun.setPosition(800, 600);*/
 
+	////////////////// TEXT /////////////////
 	sf::Font fArial;
 	if (!fArial.loadFromFile("res/arial.ttf"))	
 		cout << "font not loaded" << endl;
@@ -101,6 +115,7 @@ int main()
 	tDt.setFillColor(sf::Color::White);
 	tDt.setCharacterSize(45);
 
+	////////////////POINTEUR/////////////////
 	sf::CircleShape ptr(8);
 	ptr.setFillColor(sf::Color::Cyan);
 	ptr.setOrigin(4, 4);
@@ -109,21 +124,45 @@ int main()
 	double tEnterFrame = getTimeStamp();
 	double tExitFrame = getTimeStamp();
 
+	/////// BULLET////////////
+
 	Bullet bullets;
 	bool mouseLeftWasPressed = false;
 	Curve c;
+
+	/////////// BALL /////////
+	int ballSize = 6;
+	sf::CircleShape* ballShape = new sf::CircleShape(ballSize);
+	ballShape->setOrigin(ballSize, ballSize);
+	ballShape->setOutlineThickness(2);
+	ballShape->setFillColor(sf::Color::Blue);
+	ballShape->setOutlineColor(sf::Color::Magenta);
+
+	////////////// PLAYER ///////
+	PlayerPad* playerPad = new PlayerPad(EType::PlayerObject, player);
+	Entity* ball = new Entity(EType::Ball, ballShape);
+
+	World world;
+	world.data.push_back(playerPad);
+	world.data.push_back(ball);
+	playerPad->currentBall = ball;
+
 	while (window.isOpen()){
 		sf::Event event;
 		double dt = tExitFrame - tEnterFrame;
 		tEnterFrame = getTimeStamp();
+
 		while (window.pollEvent(event)){
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		auto pos = shape.getPosition();
-		float deltaX = dt * 160;
-		float deltaY = dt * 160;
+
+		auto pos = player->getPosition();
+		float deltaX = dt * 450;
+		float deltaY = dt * 450;
 		bool keyHit = false;
+
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)|| sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 			pos.x -= deltaX;
 			keyHit = true;
@@ -132,17 +171,24 @@ int main()
 			pos.x += deltaX;
 			keyHit = true;
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-			pos.y -= deltaY;
-			keyHit = true;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-			pos.y += deltaY;
-			keyHit = true;
-		}
-		if(keyHit)
-			shape.setPosition(pos);
+		
+		//Collision with screen
 
+		
+
+		if (keyHit) {
+			if (pos.x < 0)
+				pos.x = 0;
+			if (pos.x > window.getSize().x)
+				pos.x = window.getSize().x;
+			playerPad->setPosition(pos);
+
+			/*if (player->getPosition().x < 0.f)
+				player->setPosition(0.f, player->getPosition().y);
+
+			if (player->getPosition().x + player->getGlobalBounds().width > ScreenWidth)
+				player->setPosition(ScreenWidth - player->getGlobalBounds().width, player->getPosition().y);*/
+		}
 
 		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);
@@ -155,7 +201,7 @@ int main()
 		}
 
 		if (mouseLeftIsPressed && !mouseLeftWasPressed) {
-			auto pos = gun.getPosition();
+			//auto pos = gun.getPosition();
 			auto dir = mousePos - pos;
 			float dirLen = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 			sf::Vector2f dxy(1, 0);
@@ -173,43 +219,42 @@ int main()
 
 		//calculate angle from char to mouse
 		sf::Vector2f characterToMouse(
-			mousePos.y - shape.getPosition().y,
-			mousePos.x - shape.getPosition().x);
+			mousePos.y - player->getPosition().y,
+			mousePos.x - player->getPosition().x);
 
 		float radToDeg = 57.2958;
 		float angleC2M = atan2(characterToMouse.y, characterToMouse.x);
-		gun.setRotation(-angleC2M * radToDeg);
-		gun.setPosition(shape.getPosition() + sf::Vector2f(8, 16));
+		//gun.setRotation(-angleC2M * radToDeg);
+		//gun.setPosition(shape.getPosition() + sf::Vector2f(8, 16));
 		///
 
 		ptr.setPosition(mousePos);
 		tDt.setString( to_string(dt)+" FPS:"+ to_string((int)(1.0f / dt)));
 		
-		////////////////////
+
 
 		//CLEAR
 		window.clear();
 		
-		////////////////////
+
+
 		//UPDATE
-		bullets.update(dt);
+		world.update(dt);
 
-		////////////////////
-		//DRAW
+
+		///////////////DRAW///////////////
 		drawMountain(window);
+		drawGround(window);
 
-		bullets.draw(window);
+		world.draw(window);
+		//window.draw(gun);
 
-		//game elems
-		window.draw(shape);
-		window.draw(gun);
-		
 		c.draw(window);
 		window.draw(ptr);
 
 		//ui
 		window.draw(tDt);
-		
+
 		window.display();
 		tExitFrame = getTimeStamp();
 	}
