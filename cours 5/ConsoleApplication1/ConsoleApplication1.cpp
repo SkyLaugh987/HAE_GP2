@@ -190,6 +190,7 @@ int main()
 				player->setPosition(ScreenWidth - player->getGlobalBounds().width, player->getPosition().y);*/
 		}
 
+
 		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);
 
@@ -208,7 +209,7 @@ int main()
 			if (dirLen) {
 				dxy = dir / dirLen;
 			}
-			dxy *= 60.0f * 3;
+			dxy *= 60.0f * 6;
 			bullets.create(pos.x, pos.y, dxy.x, dxy.y);
 		}
 
@@ -239,10 +240,12 @@ int main()
 
 
 		//UPDATE
+		bullets.update(dt);
 		world.update(dt);
 
 
 		///////////////DRAW///////////////
+		bullets.draw(window);
 		drawMountain(window);
 		drawGround(window);
 
