@@ -18,6 +18,7 @@
 #include "Entity.hpp"
 #include "World.hpp"
 
+
 float catmull(float p0 , float p1 , float p2,float p3 , float t ) {
 	auto q = 2.0f * p1;
 	auto t2 = t * t;
@@ -28,7 +29,9 @@ float catmull(float p0 , float p1 , float p2,float p3 , float t ) {
 
 	return 0.5f * q;
 }
-// -----------------------------------------------------Moutain-----------------------------------
+//////////////////////////////////////
+// M O U N T A I N
+
 void drawMountain(sf::RenderWindow& window) {
 
 	sf::VertexArray arr;
@@ -65,7 +68,9 @@ void drawMountain(sf::RenderWindow& window) {
 	}
 	window.draw(arr);
 }
-//----------------------------------------------------------------------Ground----------------------------------------------------
+/////////////////////////////
+// G R O U N D
+
 void drawGround(sf::RenderWindow& window) {
 	sf::VertexArray arr;
 	arr.setPrimitiveType(sf::LineStrip);
@@ -97,16 +102,16 @@ int main()
 	player->setOrigin(100, 0);
 	sf::FloatRect nextPos;
 
-	// Wall
-	sf::RectangleShape wall;
 
-	////////// GUN /////////////
+	////////////////////////////////
+	////////// G U N
 	/*sf::RectangleShape gun(sf::Vector2f(8, 32));
 	gun.setFillColor(sf::Color(	0xFF,0x00,0x00));
 	gun.setOrigin(4,0);
 	gun.setPosition(800, 600);*/
 
-	////////////////// TEXT /////////////////
+	///////////////////////////////
+	/////T E X T
 	sf::Font fArial;
 	if (!fArial.loadFromFile("res/arial.ttf"))	
 		cout << "font not loaded" << endl;
@@ -115,7 +120,8 @@ int main()
 	tDt.setFillColor(sf::Color::White);
 	tDt.setCharacterSize(45);
 
-	////////////////POINTEUR/////////////////
+	///////////////////////////////
+	/////////P O I N T E U R
 	sf::CircleShape ptr(8);
 	ptr.setFillColor(sf::Color::Cyan);
 	ptr.setOrigin(4, 4);
@@ -124,13 +130,14 @@ int main()
 	double tEnterFrame = getTimeStamp();
 	double tExitFrame = getTimeStamp();
 
-	/////// BULLET////////////
-
+	//////////////////////////
+	/////// BULLET
 	Bullet bullets;
 	bool mouseLeftWasPressed = false;
 	Curve c;
 
-	/////////// BALL /////////
+	/////////////////////////
+	/////////// BALL 
 	int ballSize = 6;
 	sf::CircleShape* ballShape = new sf::CircleShape(ballSize);
 	ballShape->setOrigin(ballSize, ballSize);
@@ -138,14 +145,37 @@ int main()
 	ballShape->setFillColor(sf::Color::Blue);
 	ballShape->setOutlineColor(sf::Color::Magenta);
 
-	////////////// PLAYER ///////
+	/////////////////////////
+	/////// PLAYER 
 	PlayerPad* playerPad = new PlayerPad(EType::PlayerObject, player);
 	Entity* ball = new Entity(EType::Ball, ballShape);
+	ball->setPosition(playerPad->getPosition());
+
+	auto wallShapeLeft = new sf::RectangleShape(sf::Vector2f(16, 2048));
+	wallShapeLeft->setOrigin(8, 0);
+	wallShapeLeft->setFillColor(sf::Color::Blue);
+	auto wallShapeRight = new sf::RectangleShape(*wallShapeLeft);
+
+	Entity* leftWall = new Entity(EType::Wall, wallShapeLeft);
+	Entity* rightWall = new Entity(EType::Wall, wallShapeLeft);
+	rightWall->setPosition(sf::Vector2f(1280, 0));
+
+	auto wallShapeTop = new sf::RectangleShape(sf::Vector2f(2048, 16));
+	wallShapeTop->setOrigin(0,8);
+	wallShapeTop->setFillColor(sf::Color::Blue);
+
+	Entity* topWall = new Entity(EType::Wall, wallShapeTop);
+	topWall->setPosition(sf::Vector2f(0, 0));
 
 	World world;
+	world.data.push_back(leftWall);
+	world.data.push_back(rightWall);
+	world.data.push_back(topWall);
 	world.data.push_back(playerPad);
 	world.data.push_back(ball);
 	playerPad->currentBall = ball;
+
+
 
 	while (window.isOpen()){
 		sf::Event event;
@@ -171,10 +201,8 @@ int main()
 			pos.x += deltaX;
 			keyHit = true;
 		}
-		
-		//Collision with screen
 
-		
+
 
 		if (keyHit) {
 			if (pos.x < 0)
@@ -183,35 +211,44 @@ int main()
 				pos.x = window.getSize().x;
 			playerPad->setPosition(pos);
 
-			/*if (player->getPosition().x < 0.f)
-				player->setPosition(0.f, player->getPosition().y);
-
-			if (player->getPosition().x + player->getGlobalBounds().width > ScreenWidth)
-				player->setPosition(ScreenWidth - player->getGlobalBounds().width, player->getPosition().y);*/
 		}
-
 
 		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);
-
 		sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
+
 
 		if (false) {
 			if (mouseIsReleased) c.addPoint(mousePos);
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) c.clear();
 		}
 
+
 		if (mouseLeftIsPressed && !mouseLeftWasPressed) {
+
 			//auto pos = gun.getPosition();
 			auto dir = mousePos - pos;
 			float dirLen = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 			sf::Vector2f dxy(1, 0);
+
 			if (dirLen) {
 				dxy = dir / dirLen;
 			}
+
 			dxy *= 60.0f * 6;
-			bullets.create(pos.x, pos.y, dxy.x, dxy.y);
+			//bullets.create(pos.x, pos.y, dxy.x, dxy.y);
+
+			if (playerPad->currentBall) {
+				auto ball = playerPad->currentBall;
+				ball->dx = dxy.x;
+				ball->dy = dxy.y;
+				float push = 0.1;
+				ball->setPosition(sf::Vector2f(ball->getPosition().x, 
+									playerPad->getPosition().y - 16));
+			}
+			playerPad->currentBall = nullptr;
 		}
+
 
 		if (mouseLeftIsPressed) 
 			mouseLeftWasPressed = true;
@@ -225,27 +262,23 @@ int main()
 
 		float radToDeg = 57.2958;
 		float angleC2M = atan2(characterToMouse.y, characterToMouse.x);
-		//gun.setRotation(-angleC2M * radToDeg);
-		//gun.setPosition(shape.getPosition() + sf::Vector2f(8, 16));
-		///
-
 		ptr.setPosition(mousePos);
 		tDt.setString( to_string(dt)+" FPS:"+ to_string((int)(1.0f / dt)));
 		
 
-
-		//CLEAR
+		///////////////////////////
+		//C L E A R
 		window.clear();
 		
 
-
-		//UPDATE
-		bullets.update(dt);
+		///////////////////////////
+		//U P D A T E
+		//bullets.update(dt);
 		world.update(dt);
 
-
-		///////////////DRAW///////////////
-		bullets.draw(window);
+		///////////////////////////
+		//////////D R A W
+		//bullets.draw(window);
 		drawMountain(window);
 		drawGround(window);
 
@@ -255,7 +288,8 @@ int main()
 		c.draw(window);
 		window.draw(ptr);
 
-		//ui
+		///////////////////////////
+		//UI
 		window.draw(tDt);
 
 		window.display();

@@ -20,8 +20,18 @@ public:
 	float dx = 0.0f;
 	float dy = 0.0f;
 
-	Entity(EType type, sf::Shape* _spr) {
+	sf::Vector2f lastGoodPosition;
+
+	Entity(EType _type, sf::Shape* _spr) {
+		type = _type;
 		spr = _spr;
+	}
+
+	~Entity() {
+		if (spr) {
+			delete spr;
+			spr = nullptr;
+		}
 	}
 
 	sf::Vector2f getPosition() {
@@ -32,13 +42,9 @@ public:
 		return spr->setPosition(pos);
 	}
 
-	~Entity() {
-		if (spr) {
-			delete spr;
-			spr = nullptr;
-		}
+	sf::FloatRect getBoundingBox() {
+		return spr->getGlobalBounds();
 	}
-
 
 	virtual void update(double dt);
 	virtual void draw(sf::RenderWindow& win);
