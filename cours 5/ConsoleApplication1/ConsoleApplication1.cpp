@@ -99,14 +99,7 @@ int main()
 
 	Turtle turtle;
 
-	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-		pos.x -= deltaX;
-		keyHit = true;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		pos.x += deltaX;
-		keyHit = true;
-	}*/
+
 
 	/*
 		sf::RectangleShape* player = new sf::RectangleShape(sf::Vector2f(200, 20));
@@ -393,9 +386,6 @@ int main()
 #pragma endregion
 		window.clear();
 		window.display();
-
 	}
-
-
 	return 0;
 }
