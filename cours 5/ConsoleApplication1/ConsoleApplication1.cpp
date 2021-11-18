@@ -17,9 +17,10 @@
 #include "Bullet.hpp"
 #include "Entity.hpp"
 #include "World.hpp"
+#include "Turtle.hpp"
 
 
-float catmull(float p0 , float p1 , float p2,float p3 , float t ) {
+float catmull(float p0, float p1, float p2, float p3, float t) {
 	auto q = 2.0f * p1;
 	auto t2 = t * t;
 
@@ -32,7 +33,7 @@ float catmull(float p0 , float p1 , float p2,float p3 , float t ) {
 //////////////////////////////////////
 // M O U N T A I N
 
-void drawMountain(sf::RenderWindow& window) {
+/*void drawMountain(sf::RenderWindow& window) {
 
 	sf::VertexArray arr;
 	arr.setPrimitiveType(sf::LineStrip);
@@ -67,11 +68,11 @@ void drawMountain(sf::RenderWindow& window) {
 		arr.append(sf::Vertex(sf::Vector2f(x, y), col));
 	}
 	window.draw(arr);
-}
+}*/
 /////////////////////////////
 // G R O U N D
 
-void drawGround(sf::RenderWindow& window) {
+/*void drawGround(sf::RenderWindow& window) {
 	sf::VertexArray arr;
 	arr.setPrimitiveType(sf::LineStrip);
 	sf::Color col = sf::Color::Red;
@@ -85,7 +86,7 @@ void drawGround(sf::RenderWindow& window) {
 	arr.append(sf::Vertex(b, col));
 
 	window.draw(arr);
-}
+}*/
 
 int main()
 {
@@ -96,48 +97,55 @@ int main()
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
-	sf::RectangleShape* player = new sf::RectangleShape(sf::Vector2f(200, 20));
-	player->setFillColor(sf::Color::Green);
-	player->setPosition(300, 600);
-	player->setOrigin(100, 0);
-	sf::FloatRect nextPos;
+	Turtle turtle;
 
+	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+		pos.x -= deltaX;
+		keyHit = true;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		pos.x += deltaX;
+		keyHit = true;
+	}*/
 
-	////////////////////////////////
-	////////// G U N
-	/*sf::RectangleShape gun(sf::Vector2f(8, 32));
-	gun.setFillColor(sf::Color(	0xFF,0x00,0x00));
-	gun.setOrigin(4,0);
-	gun.setPosition(800, 600);*/
+	/*
+		sf::RectangleShape* player = new sf::RectangleShape(sf::Vector2f(200, 20));
+		player->setFillColor(sf::Color::Green);
+		player->setPosition(300, 600);
+		player->setOrigin(100, 0);
+		sf::FloatRect nextPos;*/
 
-	///////////////////////////////
-	/////T E X T
+		////////////////////////////////
+		////////// G U N
+		/*sf::RectangleShape gun(sf::Vector2f(8, 32));
+		gun.setFillColor(sf::Color(	0xFF,0x00,0x00));
+		gun.setOrigin(4,0);
+		gun.setPosition(800, 600);*/
+
+		///////////////////////////////
+		/////T E X T
 	sf::Font fArial;
-	if (!fArial.loadFromFile("res/arial.ttf"))	
+	if (!fArial.loadFromFile("res/arial.ttf"))
 		cout << "font not loaded" << endl;
 	sf::Text tDt;
 	tDt.setFont(fArial);
 	tDt.setFillColor(sf::Color::White);
 	tDt.setCharacterSize(45);
 
-	sf::Text score;
-	score.setFont(fArial);
-	score.setFillColor(sf::Color::Black);
-	score.setOutlineThickness(2);
-	score.setOutlineColor(sf::Color::White);
-	score.setCharacterSize(50);
-
 	//////////////////////////
 	///////P O I N T E U R
-	sf::CircleShape ptr(8);
+	/*sf::CircleShape ptr(8);
 	ptr.setFillColor(sf::Color::Cyan);
-	ptr.setOrigin(4, 4);
+	ptr.setOrigin(4, 4);*/
 
 	//////////////////////////
 	double tStart = getTimeStamp();
 	double tEnterFrame = getTimeStamp();
 	double tExitFrame = getTimeStamp();
 
+#pragma region BlockBreaker
+
+	/*
 	//////////////////////////
 	/////// BULLET
 	Bullet bullets;
@@ -145,7 +153,7 @@ int main()
 	Curve c;
 
 	/////////////////////////
-	/////////// BALL 
+	/////////// BALL
 	int ballSize = 6;
 	sf::CircleShape* ballShape = new sf::CircleShape(ballSize);
 	ballShape->setOrigin(ballSize, ballSize);
@@ -154,7 +162,7 @@ int main()
 	ballShape->setOutlineColor(sf::Color::Magenta);
 
 	/////////////////////////
-	/////// PLAYER 
+	/////// PLAYER
 	PlayerPad* playerPad = new PlayerPad(EType::PlayerObject, player);
 	Entity* ball = new Entity(EType::Ball, ballShape);
 	ball->setPosition(playerPad->getPosition());
@@ -187,7 +195,7 @@ int main()
 	playerPad->currentBall = ball;
 
 	/////////////////////////
-	////// B R I C K je ferai une boucle plus tard 
+	////// B R I C K je ferai une boucle plus tard
 	auto brick0 = new sf::RectangleShape(sf::Vector2f(100, 20));
 	brick0->setFillColor(sf::Color::Black);
 	brick0->setOutlineThickness(3);
@@ -255,20 +263,25 @@ int main()
 	world.data.push_back(b11);
 	world.data.push_back(b12);
 	world.data.push_back(b13);
-	world.data.push_back(b14);
+	world.data.push_back(b14);*/
+#pragma endregion
+
 
 	/////////////////////////
 	////// W I N D O W
-	while (window.isOpen()){
+	while (window.isOpen()) {
 		sf::Event event;
 		double dt = tExitFrame - tEnterFrame;
 		tEnterFrame = getTimeStamp();
 
-		while (window.pollEvent(event)){
+		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
 
+#pragma region PlayerBlockBreaker
+
+		/*
 		auto pos = player->getPosition();
 		float deltaX = dt * 450;
 		float deltaY = dt * 450;
@@ -325,14 +338,14 @@ int main()
 				ball->dx = dxy.x;
 				ball->dy = dxy.y;
 				float push = 0.1;
-				ball->setPosition(sf::Vector2f(ball->getPosition().x, 
+				ball->setPosition(sf::Vector2f(ball->getPosition().x,
 									playerPad->getPosition().y - 16));
 			}
 			playerPad->currentBall = nullptr;
 		}
 
 
-		if (mouseLeftIsPressed) 
+		if (mouseLeftIsPressed)
 			mouseLeftWasPressed = true;
 		else
 			mouseLeftWasPressed = false;
@@ -347,17 +360,18 @@ int main()
 		float angleC2M = atan2(characterToMouse.y, characterToMouse.x);
 		ptr.setPosition(mousePos);
 		tDt.setString( to_string(dt)+" FPS:"+ to_string((int)(1.0f / dt)));
-		
+		*/
 
 		///////////////////////////
 		//C L E A R
-		window.clear();
-		
+		//window.clear();
 
+		/*
 		///////////////////////////
 		//U P D A T E
 		//bullets.update(dt);
 		world.update(dt);
+
 
 		///////////////////////////
 		//////////D R A W
@@ -375,9 +389,13 @@ int main()
 		//UI
 		window.draw(tDt);
 
+		tExitFrame = getTimeStamp();*/
+#pragma endregion
+		window.clear();
 		window.display();
-		tExitFrame = getTimeStamp();
+
 	}
+
 
 	return 0;
 }
