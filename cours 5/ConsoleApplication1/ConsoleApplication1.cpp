@@ -89,7 +89,7 @@ void drawGround(sf::RenderWindow& window) {
 
 int main()
 {
-	float ScreenWidth = 600;
+	float ScreenWidth = 1280;
 	float ScreenHeight = 720;
 
 	sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "SFML works!");
@@ -120,12 +120,20 @@ int main()
 	tDt.setFillColor(sf::Color::White);
 	tDt.setCharacterSize(45);
 
-	///////////////////////////////
-	/////////P O I N T E U R
+	sf::Text score;
+	score.setFont(fArial);
+	score.setFillColor(sf::Color::Black);
+	score.setOutlineThickness(2);
+	score.setOutlineColor(sf::Color::White);
+	score.setCharacterSize(50);
+
+	//////////////////////////
+	///////P O I N T E U R
 	sf::CircleShape ptr(8);
 	ptr.setFillColor(sf::Color::Cyan);
 	ptr.setOrigin(4, 4);
 
+	//////////////////////////
 	double tStart = getTimeStamp();
 	double tEnterFrame = getTimeStamp();
 	double tExitFrame = getTimeStamp();
@@ -151,13 +159,16 @@ int main()
 	Entity* ball = new Entity(EType::Ball, ballShape);
 	ball->setPosition(playerPad->getPosition());
 
+	/////////////////////////
+	////// W A L L
 	auto wallShapeLeft = new sf::RectangleShape(sf::Vector2f(16, 2048));
 	wallShapeLeft->setOrigin(8, 0);
 	wallShapeLeft->setFillColor(sf::Color::Blue);
 	auto wallShapeRight = new sf::RectangleShape(*wallShapeLeft);
 
 	Entity* leftWall = new Entity(EType::Wall, wallShapeLeft);
-	Entity* rightWall = new Entity(EType::Wall, wallShapeLeft);
+	Entity* rightWall = new Entity(EType::Wall, wallShapeRight);
+	leftWall->setPosition(sf::Vector2f(0, 0));
 	rightWall->setPosition(sf::Vector2f(1280, 0));
 
 	auto wallShapeTop = new sf::RectangleShape(sf::Vector2f(2048, 16));
@@ -175,8 +186,79 @@ int main()
 	world.data.push_back(ball);
 	playerPad->currentBall = ball;
 
+	/////////////////////////
+	////// B R I C K je ferai une boucle plus tard 
+	auto brick0 = new sf::RectangleShape(sf::Vector2f(100, 20));
+	brick0->setFillColor(sf::Color::Black);
+	brick0->setOutlineThickness(3);
+	brick0->setOutlineColor(sf::Color::Magenta);
+
+	auto brick1 = new sf::RectangleShape(*brick0);
+	auto brick2 = new sf::RectangleShape(*brick0);
+	auto brick3 = new sf::RectangleShape(*brick0);
+	auto brick4 = new sf::RectangleShape(*brick0);
+	auto brick5 = new sf::RectangleShape(*brick0);
+	auto brick6 = new sf::RectangleShape(*brick0);
+	auto brick7 = new sf::RectangleShape(*brick0);
+	auto brick8 = new sf::RectangleShape(*brick0);
+	auto brick9 = new sf::RectangleShape(*brick0);
+	auto brick10 = new sf::RectangleShape(*brick0);
+	auto brick11 = new sf::RectangleShape(*brick0);
+	auto brick12 = new sf::RectangleShape(*brick0);
+	auto brick13 = new sf::RectangleShape(*brick0);
+	auto brick14 = new sf::RectangleShape(*brick0);
+
+	Entity* b0 = new Entity(EType::Brick, brick0);
+	Entity* b1 = new Entity(EType::Brick, brick1);
+	Entity* b2 = new Entity(EType::Brick, brick2);
+	Entity* b3 = new Entity(EType::Brick, brick3);
+	Entity* b4 = new Entity(EType::Brick, brick4);
+	Entity* b5 = new Entity(EType::Brick, brick5);
+	Entity* b6 = new Entity(EType::Brick, brick6);
+	Entity* b7 = new Entity(EType::Brick, brick7);
+	Entity* b8 = new Entity(EType::Brick, brick8);
+	Entity* b9 = new Entity(EType::Brick, brick9);
+	Entity* b10 = new Entity(EType::Brick, brick10);
+	Entity* b11 = new Entity(EType::Brick, brick11);
+	Entity* b12 = new Entity(EType::Brick, brick12);
+	Entity* b13 = new Entity(EType::Brick, brick13);
+	Entity* b14 = new Entity(EType::Brick, brick14);
+
+	brick0->setPosition(sf::Vector2f(100, 100));
+	brick1->setPosition(sf::Vector2f(300, 100));
+	brick2->setPosition(sf::Vector2f(500, 100));
+	brick3->setPosition(sf::Vector2f(700, 100));
+	brick4->setPosition(sf::Vector2f(900, 100));
+	brick5->setPosition(sf::Vector2f(1100, 100));
+	brick6->setPosition(sf::Vector2f(100, 200));
+	brick7->setPosition(sf::Vector2f(300, 200));
+	brick8->setPosition(sf::Vector2f(500, 200));
+	brick9->setPosition(sf::Vector2f(700, 200));
+	brick10->setPosition(sf::Vector2f(900, 200));
+	brick11->setPosition(sf::Vector2f(1100, 200));
+	brick12->setPosition(sf::Vector2f(400, 400));
+	brick13->setPosition(sf::Vector2f(600, 400));
+	brick14->setPosition(sf::Vector2f(800, 400));
 
 
+	world.data.push_back(b0);
+	world.data.push_back(b1);
+	world.data.push_back(b2);
+	world.data.push_back(b3);
+	world.data.push_back(b4);
+	world.data.push_back(b5);
+	world.data.push_back(b6);
+	world.data.push_back(b7);
+	world.data.push_back(b8);
+	world.data.push_back(b9);
+	world.data.push_back(b10);
+	world.data.push_back(b11);
+	world.data.push_back(b12);
+	world.data.push_back(b13);
+	world.data.push_back(b14);
+
+	/////////////////////////
+	////// W I N D O W
 	while (window.isOpen()){
 		sf::Event event;
 		double dt = tExitFrame - tEnterFrame;
@@ -255,7 +337,8 @@ int main()
 		else
 			mouseLeftWasPressed = false;
 
-		//calculate angle from char to mouse
+		///////////////////////////
+		/////A N G L E
 		sf::Vector2f characterToMouse(
 			mousePos.y - player->getPosition().y,
 			mousePos.x - player->getPosition().x);

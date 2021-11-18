@@ -24,7 +24,8 @@ void World::update(double dt) {
 			pad = (PlayerPad*)e;
 
 		if (e->type == Ball) {
-			for (int j = 0; j < data.size; j++) {
+			for (size_t j = 0; j < data.size(); j++)
+			{
 				auto oe = data[j];
 				if (oe->type == Wall)
 					CollideWallBall(oe, e);
@@ -32,7 +33,7 @@ void World::update(double dt) {
 		}
 
 		if (e->type == Ball) {
-			for (int j = 0; j < data.size; j++) {
+			for (int j = 0; j < data.size(); j++) {
 				auto oe = data[j];
 				if (oe->type == Brick)
 					CollideBrickBall(oe, e);
@@ -40,10 +41,10 @@ void World::update(double dt) {
 		}
 
 		if ((e->type == Ball) && (pad->currentBall == nullptr)) {
-			for (int j = 0; j < data.size; j++) {
+			for (int j = 0; j < data.size(); j++) {
 				auto oe = data[j];
 				if (oe->type == PlayerObject)
-					CollideBrickBall(oe,e);
+					CollidePadBall(oe,e);
 			}
 		}
 	}
@@ -59,6 +60,16 @@ void World::update(double dt) {
 			}
 		}
 	}
+
+	if (ToBreak.size()) {
+		for (auto b : ToBreak) {
+			auto iter = std::find(data.begin(), data.end(), b);
+			if (iter != data.end())
+				data.erase(iter);
+			delete b;
+		}
+		ToBreak.clear();
+	}
 }
 
 
@@ -66,7 +77,7 @@ void World::CollideWallBall(Entity* wall, Entity* ball) {
 	auto e = wall;
 	auto oe = ball;
 	if (e->getBoundingBox().contains(oe->getPosition())) {
-		oe->setPosition = oe->lastGoodPosition;
+		oe->setPosition(oe->lastGoodPosition);
 
 		if (e->spr->getGlobalBounds().width > e->spr->getGlobalBounds().height)
 			oe->dy = -oe->dy;
@@ -82,6 +93,23 @@ void World::CollideBrickBall(Entity* brick, Entity* ball) {
 
 		auto oldPos = ball->lastGoodPosition;
 		auto box = brick->getBoundingBox();
+
+		if ((oldPos.y < box.top) || (oldPos.y > (box.top + box.height)))
+			ball->dy = -ball->dy;
+
+		else
+			ball->dx = -ball->dx;
+		ball->setPosition(ball->lastGoodPosition);
+		ToBreak.push_back(brick);
+	}
+}
+
+void World::CollidePadBall(Entity* player, Entity* ball) {
+	sf::Vector2f pos = ball->getPosition();
+	if (player->getBoundingBox().contains(pos)) {
+
+		auto oldPos = ball->lastGoodPosition;
+		auto box = player->getBoundingBox();
 
 		if ((oldPos.y < box.top) || (oldPos.y > (box.top + box.height)))
 			ball->dy = -ball->dy;

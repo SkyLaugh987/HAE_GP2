@@ -10,4 +10,7 @@ public:
 
 	void CollideWallBall(Entity* wall, Entity* ball);
 	void CollideBrickBall(Entity* brick, Entity* ball);
+	void CollidePadBall(Entity* player, Entity* ball);
+	
+	std::vector<Entity*> ToBreak;
 };
