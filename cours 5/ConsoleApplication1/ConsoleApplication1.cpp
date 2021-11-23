@@ -18,6 +18,8 @@
 #include "Entity.hpp"
 #include "World.hpp"
 #include "Turtle.hpp"
+#include "Particle.hpp"
+#include "Game.hpp"
 
 
 float catmull(float p0, float p1, float p2, float p3, float t) {
@@ -97,7 +99,6 @@ int main()
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
-	Turtle turtle;
 
 
 
@@ -127,14 +128,19 @@ int main()
 
 	//////////////////////////
 	///////P O I N T E U R
-	/*sf::CircleShape ptr(8);
+	sf::CircleShape ptr(8);
 	ptr.setFillColor(sf::Color::Cyan);
-	ptr.setOrigin(4, 4);*/
+	ptr.setOrigin(4, 4);
 
 	//////////////////////////
 	double tStart = getTimeStamp();
 	double tEnterFrame = getTimeStamp();
 	double tExitFrame = getTimeStamp();
+
+	bool mouseLeftWasPressed = false;
+
+	Turtle turtle;
+	turtle.trs.translate(400, 300);
 
 #pragma region BlockBreaker
 
@@ -384,8 +390,81 @@ int main()
 
 		tExitFrame = getTimeStamp();*/
 #pragma endregion
+
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+			//turtle.trs.translate(-2 * dt * 60, 0);
+			turtle.trs.rotate(2 * dt * 60);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			//turtle.trs.translate(2 * dt * 60, 0);
+			turtle.trs.rotate(-2 * dt * 60);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+			turtle.trs.translate(0, -2 * dt * 60);
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			turtle.trs.translate(0, 2 * dt * 60);
+		}
+
+		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);
+
+		sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
+
+		if (mouseLeftIsPressed && !mouseLeftWasPressed) {
+
+		}
+
+		if (mouseLeftIsPressed)
+			mouseLeftWasPressed = true;
+		else
+			mouseLeftWasPressed = false;
+
+
+
+		sf::Vector2f characterToMouse(
+			mousePos.y - turtle.getPosition().y,
+			mousePos.x - turtle.getPosition().x);
+
+		////////////////////
+		///// T E S T // A N G L E
+		/*
+		float radToDeg = 57.2958;
+		float angleC2M = atan2(characterToMouse.y, characterToMouse.x);
+		turtle.trs.rotate(-angleC2M * radToDeg);
+		ptr.setPosition(mousePos);
+
+		float radToDeg = 57.2958;
+		float angleC2M = atan2(characterToMouse.y, characterToMouse.x);
+		turtle.setRotation(-angleC2M * radToDeg);
+		ptr.setPosition(mousePos);*/
+
+		////////////////////
+
+		//CLEAR
 		window.clear();
+
+		////////////////////
+		//UPDATE
+		//Game::parts.update(dt);
+		turtle.update(dt);
+
+		////////////////////
+		//DRAW
+
+		//Game::parts.draw(window);
+
+		turtle.draw(window);
+		window.draw(ptr);
+
+		//ui
+		window.draw(tDt);
+
 		window.display();
+		tExitFrame = getTimeStamp();
 	}
+
+
 	return 0;
 }

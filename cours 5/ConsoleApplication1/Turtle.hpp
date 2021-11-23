@@ -12,18 +12,41 @@ class Turtle {
 public:
 
 
-	sf::CircleShape body;
-	sf::CircleShape head;
+	sf::CircleShape comps[2];
+	sf::RectangleShape dir;
+	sf::Transform trs;
 	
-	sf::Vector2f getPosition() {
-		return head.getPosition();
-		return body.getPosition();
-	}
-
-	void setPosition(sf::Vector2f pos) {
-		return head.setPosition(pos);
-		return body.setPosition(pos);
-	}
+	
+	Turtle();
 	virtual void update(double dt);
 	virtual void draw(sf::RenderWindow& win);
+
+	/*sf::Vector2f getRotation() {
+		for (auto& c : comps)
+		{
+			return c.getRotation();
+		}
+	}
+	
+	void setRotation(sf::Vector2f rot) {
+		for (auto& c : comps) {
+
+			return c.setRotation(rot);
+		}
+	}
+	*/
+	sf::Vector2f getPosition() {
+		for (auto& c : comps) {
+
+			return c.getPosition();
+		}
+	}
+	
+	void setPosition(sf::Vector2f pos) {
+		for (auto& c : comps) {
+
+			return c.setPosition(pos);
+		}
+	}
+
 };

@@ -3,21 +3,29 @@
 
 Turtle::Turtle() {
 
-	sf::CircleShape body(50);
-	body.setFillColor(sf::Color::Green);
-	body.setOrigin(sf::Vector2f(25,25));
-	sf::Vector2f bdyOrigin = body.getOrigin();
-	sf::CircleShape head(20);
+	auto& bdy = comps[0];
+	bdy = sf::CircleShape(50);
+	bdy.setFillColor(sf::Color::Green);
+	bdy.setOutlineColor(sf::Color::White);
+	bdy.setOutlineThickness(2);
+	bdy.setOrigin(48, 48);
+
+	auto& head = comps[1];
+	head = sf::CircleShape(20);
 	head.setFillColor(sf::Color::Cyan);
-	head.setOrigin(bdyOrigin);
-	head.setPosition(sf::Vector2f(25, 0));
+	head.setOutlineColor(sf::Color::Black);
+	head.setOutlineThickness(1);
+	head.setOrigin(cos(3.14 * 0.4) * 50 + 20, sin(3.14 * 0.4) * 50 + 20);
 	
 }
 
 void Turtle::update(double dt) {
 
 }
+
 void Turtle::draw(sf::RenderWindow& win) {
-	win.draw(body);
-	win.draw(head);
+
+	for (auto& c : comps)
+		win.draw(c, trs);
+	win.draw(dir, trs);
 }
