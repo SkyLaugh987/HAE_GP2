@@ -101,9 +101,9 @@ int main()
 
 	sf::RenderTexture tex;
 
-	sf::CircleShape brush(50);
+	sf::CircleShape brush(25);
 	brush.setFillColor(sf::Color::Magenta);
-	brush.setOrigin(50,50);
+	brush.setOrigin(25,25);
 	
 
 	/*
