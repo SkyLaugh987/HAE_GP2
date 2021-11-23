@@ -28,6 +28,7 @@ Turtle::Turtle() {
 	tex.create(2048, 2048);
 	tex.clear(sf::Color(0,0,0,0));
 	
+	bool penEnabled = false;
 }
 
 
@@ -44,4 +45,25 @@ void Turtle::draw(sf::RenderWindow& win) {
 		win.draw(c, trs);
 	win.draw(dir, trs);
 	
+}
+
+Cmd* Turtle::append(Cmd* nu) {
+
+}
+
+Cmd* Turtle::applyCmd(Cmd* cmd) {
+	switch (cmd->type) {
+	case Advance:
+		trs.translate(0, -cmd->originalValue);
+		if (penEnabled) {
+			sf::CircleShape pen(25);
+			pen.getFillColor(penColor);
+			pen.setOrigin(25, 25);
+			
+		}
+		break;
+	case Rotate:
+		trs.rotate();
+		break;
+	}
 }

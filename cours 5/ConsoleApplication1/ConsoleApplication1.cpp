@@ -20,6 +20,7 @@
 #include "Turtle.hpp"
 #include "Particle.hpp"
 #include "Game.hpp"
+#include "res/Commande.txt"
 
 
 float catmull(float p0, float p1, float p2, float p3, float t) {
@@ -424,6 +425,42 @@ int main()
 				turtle.tex.draw(brush);
 			}
 		}
+
+		/*static bool enterWasPressed = false;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !enterWasPressed) {
+			FILE* f = nullptr;
+			fopen_s(&f, "res/Commande.txt", "rb");
+			if (f && !feof(f)) {
+				char line[256] = {};
+				for (;;) {
+					int64_t nb = 0;
+					fscanf_s(f, "%s %lld\n", line, 256, &nb);
+					std::string s = line;
+					if (s == "Advance") {
+						//turtle.translate(nb);
+						turtle.trs.translate((0, -nb));
+					}
+					else if (s == "Rotate") {
+						//turtle.rotate(nb);
+
+					}
+					else if (s == "PenUp") {
+						//turtle.setPen(false);
+					}
+					else if (s == "PenDown") {
+						//turtle.setPen(true);
+					}
+					else if (s == "PenColor") {
+						//turtle.setPenColor(sf::Color((unsigned int)nb));
+					}
+					if (feof(f))
+						break;
+				}
+				fclose(f);
+			}
+			enterWasPressed = true;
+		}
+		enterWasPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Enter);*/
 
 		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);

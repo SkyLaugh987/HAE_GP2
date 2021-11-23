@@ -9,8 +9,10 @@
 
 enum CmdType {
 	Advance,
-	Turn,
-	Draw
+	Rotate,
+	PenDown,
+	PenUp
+	
 };
 
 struct Cmd
@@ -18,7 +20,15 @@ struct Cmd
 	CmdType type = Advance;
 	float originalValue = 0.0f;
 	float currentValue = 0.0f;
+	sf::Color col;
+	Cmd* next = nullptr;
 
+	Cmd(CmdType t, float value = 0.0) {
+		type = t;
+		originalValue = value;
+	}
+
+	
 };
 
 class Turtle {
@@ -35,6 +45,13 @@ public:
 	Turtle();
 	virtual void update(double dt);
 	virtual void draw(sf::RenderWindow& win);
+
+	Cmd* append(Cmd* nu) {
+		if ();
+	}
+
+	Cmd* applyCmd(Cmd* cmd);
+protected: 
 
 
 };
