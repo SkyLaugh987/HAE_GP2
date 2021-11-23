@@ -1,5 +1,5 @@
-Advance
-Rotate
-PenUp
+Advance 20
+Rotate -200
+PenUp 
 PenDown
 PenColor
