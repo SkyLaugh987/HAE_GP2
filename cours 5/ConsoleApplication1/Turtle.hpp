@@ -9,7 +9,8 @@
 
 enum CmdType {
 	Advance,
-	Turn 
+	Turn,
+	Draw
 };
 
 struct Cmd

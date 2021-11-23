@@ -39,6 +39,7 @@ void Turtle::draw(sf::RenderWindow& win) {
 	tex.display();
 	sf::Sprite sprite(tex.getTexture());
 	win.draw(sprite);
+
 	for (auto& c : comps)
 		win.draw(c, trs);
 	win.draw(dir, trs);

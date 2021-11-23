@@ -410,13 +410,19 @@ int main()
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
 			turtle.trs.translate(0, -2 * dt * 100);
-			brush.setPosition(turtle.trs.transformPoint(0,0));
-			turtle.tex.draw(brush);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+
+				brush.setPosition(turtle.trs.transformPoint(0, 0));
+				turtle.tex.draw(brush);
+			}
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			turtle.trs.translate(0, 2 * dt * 100);
-			brush.setPosition(turtle.trs.transformPoint(0, 0));
-			turtle.tex.draw(brush);
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+
+				brush.setPosition(turtle.trs.transformPoint(0, 0));
+				turtle.tex.draw(brush);
+			}
 		}
 
 		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
@@ -477,7 +483,6 @@ int main()
 		window.display();
 		tExitFrame = getTimeStamp();
 	}
-
 
 	return 0;
 }
