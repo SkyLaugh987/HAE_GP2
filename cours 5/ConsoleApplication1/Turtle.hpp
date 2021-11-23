@@ -7,46 +7,33 @@
 #include "SFML/Graphics/CircleShape.hpp"
 #include "SFML//Graphics/Sprite.hpp"
 
+enum CmdType {
+	Advance,
+	Turn 
+};
+
+struct Cmd
+{
+	CmdType type = Advance;
+	float originalValue = 0.0f;
+	float currentValue = 0.0f;
+
+};
+
 class Turtle {
 
 public:
 
 
-	sf::CircleShape comps[2];
+	sf::CircleShape comps[3];
 	sf::RectangleShape dir;
 	sf::Transform trs;
+	sf::RenderTexture tex;
 	
 	
 	Turtle();
 	virtual void update(double dt);
 	virtual void draw(sf::RenderWindow& win);
 
-	/*sf::Vector2f getRotation() {
-		for (auto& c : comps)
-		{
-			return c.getRotation();
-		}
-	}
-	
-	void setRotation(sf::Vector2f rot) {
-		for (auto& c : comps) {
-
-			return c.setRotation(rot);
-		}
-	}
-	*/
-	sf::Vector2f getPosition() {
-		for (auto& c : comps) {
-
-			return c.getPosition();
-		}
-	}
-	
-	void setPosition(sf::Vector2f pos) {
-		for (auto& c : comps) {
-
-			return c.setPosition(pos);
-		}
-	}
 
 };

@@ -99,8 +99,12 @@ int main()
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
+	sf::RenderTexture tex;
 
-
+	sf::CircleShape brush(50);
+	brush.setFillColor(sf::Color::Magenta);
+	brush.setOrigin(50,50);
+	
 
 	/*
 		sf::RectangleShape* player = new sf::RectangleShape(sf::Vector2f(200, 20));
@@ -128,9 +132,9 @@ int main()
 
 	//////////////////////////
 	///////P O I N T E U R
-	sf::CircleShape ptr(8);
+	/*sf::CircleShape ptr(8);
 	ptr.setFillColor(sf::Color::Cyan);
-	ptr.setOrigin(4, 4);
+	ptr.setOrigin(4, 4);*/
 
 	//////////////////////////
 	double tStart = getTimeStamp();
@@ -141,6 +145,10 @@ int main()
 
 	Turtle turtle;
 	turtle.trs.translate(400, 300);
+	/*sf::CircleShape trail(20);
+	trail.setFillColor(sf::Color::Magenta);
+	trail.setOrigin(cos(3.14 * 0.4) * 50 - 20, sin(3.14 * 0.4) * 50 - 20);*/
+
 
 #pragma region BlockBreaker
 
@@ -394,17 +402,21 @@ int main()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 			//turtle.trs.translate(-2 * dt * 60, 0);
-			turtle.trs.rotate(2 * dt * 60);
+			turtle.trs.rotate(-2 * dt * 100);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			//turtle.trs.translate(2 * dt * 60, 0);
-			turtle.trs.rotate(-2 * dt * 60);
+			turtle.trs.rotate(2 * dt * 100);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-			turtle.trs.translate(0, -2 * dt * 60);
+			turtle.trs.translate(0, -2 * dt * 100);
+			brush.setPosition(turtle.trs.transformPoint(0,0));
+			turtle.tex.draw(brush);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-			turtle.trs.translate(0, 2 * dt * 60);
+			turtle.trs.translate(0, 2 * dt * 100);
+			brush.setPosition(turtle.trs.transformPoint(0, 0));
+			turtle.tex.draw(brush);
 		}
 
 		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
@@ -423,9 +435,9 @@ int main()
 
 
 
-		sf::Vector2f characterToMouse(
+		/*sf::Vector2f characterToMouse(
 			mousePos.y - turtle.getPosition().y,
-			mousePos.x - turtle.getPosition().x);
+			mousePos.x - turtle.getPosition().x);*/
 
 		////////////////////
 		///// T E S T // A N G L E
@@ -453,10 +465,11 @@ int main()
 		////////////////////
 		//DRAW
 
+		turtle.draw(window);
+		//window.draw(trail);
 		//Game::parts.draw(window);
 
-		turtle.draw(window);
-		window.draw(ptr);
+		//window.draw(ptr);
 
 		//ui
 		window.draw(tDt);
