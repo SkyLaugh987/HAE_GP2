@@ -2,25 +2,25 @@
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
-#include "Int64Array.hpp"
-#include "Tool.hpp"
-#include "List.hpp"
-#include <algorithm>
 #include <vector>
-#include "Tree.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Main.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Audio.hpp>
+
+#include "Int64Array.hpp"
+#include "Tool.hpp"
+#include "List.hpp"
+#include <algorithm>
+#include "Tree.hpp"
 
 #include "Curve.hpp"
-#include "Bullet.hpp"
-#include "Entity.hpp"
-#include "World.hpp"
-#include "Turtle.hpp"
 #include "Particle.hpp"
+#include "Entity.hpp"
 #include "Game.hpp"
-#include "res/Commande.txt"
+#include "Turtle.hpp"
+
 
 
 float catmull(float p0, float p1, float p2, float p3, float t) {
@@ -104,8 +104,8 @@ int main()
 
 	sf::CircleShape brush(25);
 	brush.setFillColor(sf::Color::Magenta);
-	brush.setOrigin(25,25);
-	
+	brush.setOrigin(25, 25);
+
 
 	/*
 		sf::RectangleShape* player = new sf::RectangleShape(sf::Vector2f(200, 20));
@@ -145,8 +145,8 @@ int main()
 	bool mouseLeftWasPressed = false;
 
 	Turtle turtle;
-	turtle.trs.translate(400, 300);
-	/*sf::CircleShape trail(20);
+	/*turtle.trs.translate(400, 300);
+	sf::CircleShape trail(20);
 	trail.setFillColor(sf::Color::Magenta);
 	trail.setOrigin(cos(3.14 * 0.4) * 50 - 20, sin(3.14 * 0.4) * 50 - 20);*/
 
@@ -277,6 +277,8 @@ int main()
 
 	/////////////////////////
 	////// W I N D O W
+	sf::Vector2i winPos = window.getPosition();
+
 	while (window.isOpen()) {
 		sf::Event event;
 		double dt = tExitFrame - tEnterFrame;
@@ -401,30 +403,77 @@ int main()
 #pragma endregion
 
 
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-			//turtle.trs.translate(-2 * dt * 60, 0);
-			turtle.trs.rotate(-2 * dt * 100);
+			turtle.rotate(-2 * dt * 60);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-			//turtle.trs.translate(2 * dt * 60, 0);
-			turtle.trs.rotate(2 * dt * 100);
+			turtle.rotate(2 * dt * 60);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-			turtle.trs.translate(0, -2 * dt * 100);
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-
-				brush.setPosition(turtle.trs.transformPoint(0, 0));
-				turtle.tex.draw(brush);
-			}
+			turtle.translate(2 * dt * 60);
 		}
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-			turtle.trs.translate(0, 2 * dt * 100);
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-
-				brush.setPosition(turtle.trs.transformPoint(0, 0));
-				turtle.tex.draw(brush);
-			}
+			turtle.translate(-2 * dt * 60);
 		}
+
+
+		
+		static bool penEnabled = false;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			penEnabled = !penEnabled;
+			turtle.setPen(penEnabled);
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1))
+			turtle.setPenColor(sf::Color::Red);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2))
+			turtle.setPenColor(sf::Color::Green);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3))
+			turtle.setPenColor(sf::Color::Blue);
+
+
+
+		static bool enterWasPressed = false;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !enterWasPressed) {
+
+			FILE* f = nullptr;
+			fopen_s(&f, "res/Commande.txt", "rb");
+			if (f && !feof(f)) {
+				const int maxLineSize = 256;
+				char line[maxLineSize] = {};
+				for (;;) {
+					int64_t nb = 0;
+					fscanf_s(f, "%s %lld\n", line, maxLineSize, &nb);
+					std::string s = line;
+					if (s == "Advance") {
+						turtle.translate(nb);
+					}
+					else if (s == "Rotate") {
+						turtle.rotate(nb);
+					}
+					else if (s == "PenUp") {
+						turtle.setPen(false);
+					}
+					else if (s == "PenDown") {
+						turtle.setPen(true);
+					}
+					else if (s == "PenColor") {
+						turtle.setPenColor(sf::Color((unsigned int)nb));
+					}
+					if (feof(f))
+						break;
+				}
+				fclose(f);
+			}
+			enterWasPressed = true;
+		}
+		enterWasPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Enter);
+
+
 
 		/*static bool enterWasPressed = false;
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !enterWasPressed) {
@@ -496,7 +545,6 @@ int main()
 		ptr.setPosition(mousePos);*/
 
 		////////////////////
-
 		//CLEAR
 		window.clear();
 

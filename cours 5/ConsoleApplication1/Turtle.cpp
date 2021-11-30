@@ -33,6 +33,9 @@ Turtle::Turtle() {
 
 
 void Turtle::update(double dt) {
+	
+	while (cmds)
+		cmds = applyCmdInterp(cmds, dt);
 
 }
 
@@ -47,23 +50,81 @@ void Turtle::draw(sf::RenderWindow& win) {
 	
 }
 
-Cmd* Turtle::append(Cmd* nu) {
 
+void Turtle::appendCmd(Cmd* cmd) {
+	if (cmds)
+		cmds = cmds->append(cmd);
+	else
+		cmds = cmd;
 }
 
 Cmd* Turtle::applyCmd(Cmd* cmd) {
 	switch (cmd->type) {
 	case Advance:
-		trs.translate(0, -cmd->originalValue);
+		trs.translate(0, -cmd->value);
 		if (penEnabled) {
-			sf::CircleShape pen(25);
-			pen.getFillColor(penColor);
-			pen.setOrigin(25, 25);
-			
+			sf::CircleShape pen(8);
+			pen.setFillColor(penColor);
+			pen.setOrigin(8, 8);
+			pen.setPosition(trs.transformPoint(sf::Vector2f(0, 0)));
+			tex.draw(pen);
+		}
+		break;
+	case Rotate:	trs.rotate(cmd->value); break; break;
+	case PenUp:		penEnabled = false; break;
+	case PenDown:	penEnabled = true; break;
+	case PenColor:
+		penColor = cmd->col;
+		break;
+	default:
+		break;
+	}
+
+	return nullptr;
+}
+
+Cmd* Turtle::applyCmdInterp(Cmd* cmd, double dt) {
+	dt = 1.0f / 60.0f;
+	float ratio = cmd->timer / cmd->maxDuration;
+	float speed = 1.0f / cmd->maxDuration;
+	bool destroy = false;
+	switch (cmd->type) {
+	case Advance:
+		trs.translate(0, -cmd->value * dt * speed);
+		if (penEnabled) {
+			sf::CircleShape pen(8);
+			pen.setFillColor(penColor);
+			pen.setOrigin(8, 8);
+			pen.setPosition(trs.transformPoint(sf::Vector2f(0, 0)));
+			tex.draw(pen);
 		}
 		break;
 	case Rotate:
-		trs.rotate();
+		trs.rotate(cmd->value * dt * speed);
 		break;
+	case PenUp:		penEnabled = false;
+		destroy = true;
+		break;
+	case PenDown:	penEnabled = true;
+		destroy = true;
+		break;
+	case PenColor:
+		penColor = cmd->col;
+		destroy = true;
+		break;
+	default:
+		break;
+	}
+
+	cmd->timer += dt;
+	if (cmd->timer >= cmd->maxDuration)
+		destroy = true;
+
+	if (!destroy) {
+		return cmd;
+	}
+	else {
+		cmd = cmd->popFirst();
+		return cmd;
 	}
 }
