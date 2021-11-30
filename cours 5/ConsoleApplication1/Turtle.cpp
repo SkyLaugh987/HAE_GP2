@@ -2,6 +2,7 @@
 #include "SFML/Graphics/Rect.hpp"
 #include <vector>
 
+
 Turtle::Turtle() {
 
 	auto& bdy = comps[0];

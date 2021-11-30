@@ -20,7 +20,8 @@
 #include "Entity.hpp"
 #include "Game.hpp"
 #include "Turtle.hpp"
-
+#include"imgui.h"
+#include "imgui-SFML.h"
 
 
 float catmull(float p0, float p1, float p2, float p3, float t) {
@@ -106,6 +107,7 @@ int main()
 	brush.setFillColor(sf::Color::Magenta);
 	brush.setOrigin(25, 25);
 
+	ImGui::SFML::Init (window) ;
 
 	/*
 		sf::RectangleShape* player = new sf::RectangleShape(sf::Vector2f(200, 20));
@@ -145,6 +147,7 @@ int main()
 	bool mouseLeftWasPressed = false;
 
 	Turtle turtle;
+	
 	/*turtle.trs.translate(400, 300);
 	sf::CircleShape trail(20);
 	trail.setFillColor(sf::Color::Magenta);
@@ -285,6 +288,7 @@ int main()
 		tEnterFrame = getTimeStamp();
 
 		while (window.pollEvent(event)) {
+			ImGui::SFML::ProcessEvent(window, event);
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
@@ -526,6 +530,82 @@ int main()
 			mouseLeftWasPressed = false;
 
 
+		/////////////////////
+		/////I M G U I
+		using namespace ImGui;
+		SFML::Update(window, sf::milliseconds((int)(dt * 1000)));
+
+
+
+		static Cmd* head = nullptr;
+		if (TreeNode("Commandes")) {
+			if (Button(" + ")) {
+				auto p = new Cmd(Advance);
+				p->value = p->originalValue = 50;
+				if (head == nullptr)
+					head = p;
+				else
+					head = head->append(p);
+			}
+			TreePop();
+		}
+		int idx = 0;
+		auto h = head;
+
+		while (h) {
+			PushID(idx);
+			Value("idx", idx);
+			static const char* items[] = {
+				"Advance",
+				"Rotate",
+				"PenDown",
+				"Penup",
+				"PenColor",
+			};
+
+			Combo("Cmd type", (int*)&h->type, items, IM_ARRAYSIZE(items));
+			switch (h->type) {
+			case Advance:
+				if (DragFloat("value", &h->originalValue))
+					h->value = h->originalValue;
+				break;
+
+			case Rotate:
+				if (SliderAngle("value", &h->originalValue))
+					h->value = h->originalValue;
+				break;
+
+			case PenColor: {
+				auto& col = h->col;
+				float fcol[4] = { col.r / 255.0f,col.g / 255.0f, col.b / 255.0f, col.a / 255.0f };
+				if (ColorEdit4("col", fcol)) {
+					col.r = fcol[0] * 255.0f;
+					col.g = fcol[1] * 255.0f;
+					col.b = fcol[2] * 255.0f;
+					col.a = fcol[3] * 255.0f;
+				}
+			}
+
+			}
+
+			NewLine();
+			Separator();
+			h = h->next;
+			idx++;
+			PopID();
+
+			if (Button("Avance"))	turtle.translate(40);			ImGui::SameLine();
+			if (Button("Recule"))	turtle.translate(-40);
+			if (Button("Gauche"))	turtle.rotate(-20);				ImGui::SameLine();
+			if (Button("Droite")) 	turtle.rotate(20);
+			if (Button("PenDown"))	turtle.setPen(penEnabled);		ImGui::SameLine();
+			if (Button("PenUp"))	turtle.setPen(!penEnabled);		ImGui::SameLine();
+
+			ImGui::Button("PenColor");
+
+		}
+
+
 
 		/*sf::Vector2f characterToMouse(
 			mousePos.y - turtle.getPosition().y,
@@ -559,15 +639,15 @@ int main()
 		turtle.draw(window);
 		//window.draw(trail);
 		//Game::parts.draw(window);
-
 		//window.draw(ptr);
 
 		//ui
 		window.draw(tDt);
-
+		ImGui::SFML::Render(window);
 		window.display();
 		tExitFrame = getTimeStamp();
 	}
 
 	return 0;
+	ImGui::SFML::Shutdown();
 }
