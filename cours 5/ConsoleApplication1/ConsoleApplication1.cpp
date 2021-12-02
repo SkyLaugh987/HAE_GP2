@@ -92,6 +92,199 @@ float catmull(float p0, float p1, float p2, float p3, float t) {
 	window.draw(arr);
 }*/
 
+
+static Turtle* tur = nullptr;
+static sf::Color clearColor(0, 0, 0, 255);
+static bool toolsOpened = true;
+
+
+static void showTools() {
+	using namespace ImGui;
+	if (Begin("My Tools", &toolsOpened)) {
+		float f[4] = { 
+			clearColor.r / 255.0f,
+			clearColor.g / 255.0f,
+			clearColor.b / 255.0f,
+			clearColor.a / 255.0f,
+		};
+		ImVec4 col(clearColor.r / 255.0f, clearColor.g / 255.0f, clearColor.b / 255.0f, clearColor.a / 255.0f);
+		if (ImGui::ColorEdit4("bg", f)) {
+			clearColor.r = f[0]*255.0f;
+			clearColor.g = f[1]*255.0f;
+			clearColor.b = f[2]*255.0f;
+			clearColor.a = f[3]*255.0f;
+		}
+	}
+	if (tur) {
+		sf::Vector2f pos = tur->getPosition();
+		Value("x", pos.x);
+		Value("y", pos.y);
+		if (Button("Reset")) {
+			tur->reset();
+		} SameLine();
+		if (Button("Avance")) {
+			tur->translate(90);
+		} SameLine();
+		if (Button("Gauche")) {
+			tur->rotate(-25);
+		}SameLine();
+		if (Button("Droite")) {
+			tur->rotate(25);
+		}
+		Checkbox("pen state", &tur->penEnabled);
+
+
+		static Cmd* head = nullptr;
+		//
+		if (TreeNode("Commandes")) {
+			//faire un bouton pour creer une nouvelle commande
+			if (Button("+")) {
+				auto p = new Cmd(Advance);
+				p->value = p->originalValue = 50;
+				if (nullptr == head)
+					head = p;
+				else
+					head = head->append(p);
+			}
+
+			int idx = 0;
+			ImGui::Separator();
+			auto h = head;
+			while (h) {
+				PushID(idx);
+				Value("idx", idx);
+				static const char* items[] = {
+					"Clear",
+					"Advance",
+					"Rotate",
+					"PenUp",
+					"PenDown",
+					"PenColor",
+				};
+				if (Combo("Cmd type", (int*)&h->type, items, IM_ARRAYSIZE(items))) {
+					if (h->type == Rotate)
+						h->value = h->originalValue = 0;
+				}
+				Value("timer", h->timer);
+				switch (h->type)
+				{
+
+				case PenDown:
+				case PenUp:
+					break;
+				case PenColor: {
+					auto& col = h->col;
+					float fcol[4] = { col.r / 255.0f, col.g / 255.0f, col.b / 255.0f, col.a / 255.0f };
+					if (ImGui::ColorEdit4("col", fcol)) {
+						col.r = fcol[0] * 255.0f;
+						col.g = fcol[1] * 255.0f;
+						col.b = fcol[2] * 255.0f;
+						col.a = fcol[3] * 255.0f;
+					}
+					break;
+				}
+				case Rotate: {
+					float degToRad = 0.0174533;
+					float deg = h->originalValue * degToRad;
+					if (SliderAngle("value", &deg)) {
+						h->value = h->originalValue = deg / degToRad;
+					}
+					break;
+				}
+				default:
+					if (DragFloat("value", &h->originalValue)) {
+						h->value = h->originalValue;
+					}
+					break;
+				}
+				NewLine();
+				ImGui::Separator();
+				h = h->next;
+				idx++;
+				PopID();
+			}
+			//pour chaque commande
+			// pouvoir editer le type
+			// pouvoir editer la valeur
+			// pouvoir editer la couleur
+			
+			Separator();
+			Cmd* tc = tur->cmds;
+			idx = 0;
+			while (tc) {
+				PushID(idx);
+				Value("val", tc->value);
+				tc = tc->next;
+				idx++;
+				PopID();
+			}
+
+			SameLine();
+			if (Button("Run")) {
+				if(head)tur->appendCmd(head);
+				head = nullptr;
+				//passer le head a la tortues
+			}
+
+			SameLine();
+
+			if (Button("Load")) {
+				FILE* f = nullptr;
+				fopen_s(&f, "res/manualsave.txt", "rb");
+				if (f && !feof(f)) {
+					const int maxLineSize = 256;
+					char line[maxLineSize] = {};
+					for (;;) {
+						int64_t nb = 0;
+						fscanf_s(f, "%s %lld\n", line, maxLineSize, &nb);
+						std::string s = line;
+						if (s == "Advance") {
+							tur->translate(nb);
+						}
+						else if (s == "Rotate") {
+							tur->rotate(nb);
+						}
+						else if (s == "PenUp") {
+							tur->setPen(false);
+						}
+						else if (s == "PenDown") {
+							tur->setPen(true);
+						}
+						else if (s == "PenColor") {
+							tur->setPenColor(sf::Color((unsigned int)nb));
+						}
+
+						if (feof(f))
+							break;
+					}
+					fclose(f);
+					head = tur->cmds;
+					tur->cmds = nullptr;
+				}
+			}
+			SameLine();
+
+			if (Button("Save")) {
+				//sauver le fichier
+				FILE* f = nullptr;
+				fopen_s(&f, "res/manualsave.txt", "wb");
+				if (f&& head) {
+					tur->write(f, head);
+					fflush(f);
+					fclose(f);
+				}
+			}
+			//bouton executer liste
+			//bouton sauver liste
+			//bouton charger liste
+			TreePop();
+		}
+		
+
+	}
+	End();
+}
+
 int main()
 {
 	float ScreenWidth = 1280;
@@ -108,6 +301,7 @@ int main()
 	brush.setOrigin(25, 25);
 
 	ImGui::SFML::Init (window) ;
+	static Turtle* tur = nullptr;
 
 	/*
 		sf::RectangleShape* player = new sf::RectangleShape(sf::Vector2f(200, 20));
@@ -537,73 +731,7 @@ int main()
 
 
 
-		static Cmd* head = nullptr;
-		if (TreeNode("Commandes")) {
-			if (Button(" + ")) {
-				auto p = new Cmd(Advance);
-				p->value = p->originalValue = 50;
-				if (head == nullptr)
-					head = p;
-				else
-					head = head->append(p);
-			}
-			TreePop();
-		}
-		int idx = 0;
-		auto h = head;
-
-		while (h) {
-			PushID(idx);
-			Value("idx", idx);
-			static const char* items[] = {
-				"Advance",
-				"Rotate",
-				"PenDown",
-				"Penup",
-				"PenColor",
-			};
-
-			Combo("Cmd type", (int*)&h->type, items, IM_ARRAYSIZE(items));
-			switch (h->type) {
-			case Advance:
-				if (DragFloat("value", &h->originalValue))
-					h->value = h->originalValue;
-				break;
-
-			case Rotate:
-				if (SliderAngle("value", &h->originalValue))
-					h->value = h->originalValue;
-				break;
-
-			case PenColor: {
-				auto& col = h->col;
-				float fcol[4] = { col.r / 255.0f,col.g / 255.0f, col.b / 255.0f, col.a / 255.0f };
-				if (ColorEdit4("col", fcol)) {
-					col.r = fcol[0] * 255.0f;
-					col.g = fcol[1] * 255.0f;
-					col.b = fcol[2] * 255.0f;
-					col.a = fcol[3] * 255.0f;
-				}
-			}
-
-			}
-
-			NewLine();
-			Separator();
-			h = h->next;
-			idx++;
-			PopID();
-
-			if (Button("Avance"))	turtle.translate(40);			ImGui::SameLine();
-			if (Button("Recule"))	turtle.translate(-40);
-			if (Button("Gauche"))	turtle.rotate(-20);				ImGui::SameLine();
-			if (Button("Droite")) 	turtle.rotate(20);
-			if (Button("PenDown"))	turtle.setPen(penEnabled);		ImGui::SameLine();
-			if (Button("PenUp"))	turtle.setPen(!penEnabled);		ImGui::SameLine();
-
-			ImGui::Button("PenColor");
-
-		}
+		
 
 
 

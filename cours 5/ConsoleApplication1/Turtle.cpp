@@ -27,14 +27,14 @@ Turtle::Turtle() {
 	trail.setOrigin(bdy.getPosition() + sf::Vector2f(8, -35));
 
 	tex.create(2048, 2048);
-	tex.clear(sf::Color(0,0,0,0));
-	
+	tex.clear(sf::Color(0, 0, 0, 0));
+
 	bool penEnabled = false;
 }
 
 
 void Turtle::update(double dt) {
-	
+
 	while (cmds)
 		cmds = applyCmdInterp(cmds, dt);
 
@@ -48,8 +48,21 @@ void Turtle::draw(sf::RenderWindow& win) {
 	for (auto& c : comps)
 		win.draw(c, trs);
 	win.draw(dir, trs);
-	
+
 }
+
+void Turtle::reset() {
+	trs = sf::Transform::Identity;
+	trs.translate(200, 200);
+	trs.rotate(180);
+	tex.clear(sf::Color(0, 0, 0, 0));
+
+	while (cmds) {
+		cmds = cmds->popFirst();
+	}
+}
+
+
 
 
 void Turtle::appendCmd(Cmd* cmd) {
@@ -58,6 +71,32 @@ void Turtle::appendCmd(Cmd* cmd) {
 	else
 		cmds = cmd;
 }
+
+
+void Turtle::write(FILE* f, Cmd* cmd) {
+	switch (cmd->type) {
+
+	case Advance: { fprintf(f, "Advance %d\n", (int)cmd->value); break; }
+	case Rotate: { fprintf(f, "Rotate %d\n", (int)cmd->value); break; }
+	case PenUp: { fprintf(f, "PenUp\n"); break; }
+	case PenDown: { fprintf(f, "PenDown\n"); break; }
+	case PenColor: { fprintf(f, "PenColor %u\n", (unsigned int)cmd->col.toInteger()); break; }
+	}
+	if (cmd->next)
+		write(f, cmd->next);
+}
+
+
+void Turtle::writeCommands(const char* fname) {
+	FILE* f = nullptr;
+	fopen_s(&f, fname, "wb");
+	if (f) {
+		write(f, cmds);
+		fflush(f);
+		fclose(f);
+	}
+}
+
 
 Cmd* Turtle::applyCmd(Cmd* cmd) {
 	switch (cmd->type) {
@@ -83,6 +122,7 @@ Cmd* Turtle::applyCmd(Cmd* cmd) {
 
 	return nullptr;
 }
+
 
 Cmd* Turtle::applyCmdInterp(Cmd* cmd, double dt) {
 	dt = 1.0f / 60.0f;

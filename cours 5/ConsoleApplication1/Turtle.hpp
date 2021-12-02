@@ -59,31 +59,41 @@ public:
 	sf::Color penColor;
 
 	Turtle();
+	void reset();
 	virtual void update(double dt);
 	virtual void draw(sf::RenderWindow& win);
 
 
+	void write(FILE* f, Cmd* cmd);
 	void appendCmd(Cmd* cmd);
 	void translate(float value) { appendCmd(new Cmd(Advance, value)); };
 	void rotate(float value) { appendCmd(new Cmd(Rotate, value)); };
 
+
 	void setPen(bool value) {
+		
 		if (value)
 			appendCmd(new Cmd(PenDown));
 		else
 			appendCmd(new Cmd(PenUp));
 	};
 
+
 	void setPenColor(sf::Color col) {
+
 		auto colCmd = new Cmd(PenColor);
 		colCmd->col = col;
 		appendCmd(colCmd);
 	};
 
+
+	void writeCommands(const char* fname);
+	sf::Vector2f getPosition() { return trs.transformPoint(sf::Vector2f()); };
+	Cmd* cmds = nullptr;
+
 protected: 
 	sf::Transform trs;
 	Cmd* applyCmd(Cmd* cmd);
 	Cmd* applyCmdInterp(Cmd* cmd, double dt);
-	Cmd* cmds = nullptr;
 };
 
