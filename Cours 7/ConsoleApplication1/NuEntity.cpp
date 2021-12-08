@@ -35,11 +35,37 @@ void NuEntity::im() {
 }
 
 void NuEntity:: update(double dt) {
-	int a = 0;
+
+
+	dx *= fric;
+	rx = dx * dt;
+
+
+	while (rx > 1) {
+		rx--;
+		cx++;
+	}
+	while (rx < 0) {
+		rx++;
+		cx--;
+	}
+
+	/*dy *= fric;
+	ry = dy * dt;
+
+	while (ry > 1) {
+		ry--;
+		cy++;
+	}
+	while (ry < 0) {
+		ry++;
+		cy--;
+	}*/
+
+	syncSprite();
 }
 
 
 void NuEntity::draw(sf::RenderWindow& win) {
 	win.draw(*spr);
-	int b = 0;
 }

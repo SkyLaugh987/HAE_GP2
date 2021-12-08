@@ -12,7 +12,7 @@ class NuEntity {
 public:
 
 	sf::Shape*		 spr = nullptr;
-
+	float fric = 0.98f;
 
 	sf::Vector2f lastGoodPosition;
 	

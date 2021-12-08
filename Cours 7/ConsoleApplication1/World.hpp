@@ -9,7 +9,7 @@ public:
 	void update(double dt);
 	void draw(sf::RenderWindow& win);
 
-	std::vector<NuEntity*> ToBreak;
+
 
 
 };

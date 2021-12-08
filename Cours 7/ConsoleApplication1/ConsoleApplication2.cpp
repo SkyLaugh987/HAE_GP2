@@ -56,26 +56,31 @@ int main() {
 		}
 		
 		
-		//auto pos = shape->getPosition();
-		float deltaX = dt * 450;
-		float deltaY = dt * 450;
+		auto pos = player->getPosition();
+		/*float deltaX = dt * 450;
+		float deltaY = dt * 450;*/
 		bool keyHit = false;
 
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 			keyHit = true;
+			player->dx -= 2;
+			
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			keyHit = true;
+			player->dx += 5;
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			keyHit = true;
+			player->dy += 10;
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
 			keyHit = true;
+			player->dy -= 2;
 		}
 		if (keyHit) {
-			
+
 
 		}
 		ImGui::SFML::Update(window, sf::milliseconds((int)(dt * 1000)));
