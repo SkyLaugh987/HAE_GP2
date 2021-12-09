@@ -1,5 +1,6 @@
 #pragma once
 #include "NuEntity.hpp"
+#include "World.hpp"
 #include <vector>
 
 class World {

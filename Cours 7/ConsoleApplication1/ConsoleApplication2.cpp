@@ -5,6 +5,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
+#include <cstdint>
+#include <iomanip>
+#include <math.h>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Main.hpp>
@@ -17,7 +20,13 @@
 #include "NuEntity.hpp"
 #include "World.hpp"
 
-
+float clamp(float val, float a, float b) {
+	if (val < a)
+		val = a;
+	if (val > b)
+		val = b;
+	return val;
+}
 int main() {
 
 	float ScreenWidth = 1280;
@@ -32,8 +41,9 @@ int main() {
 	shape->setOutlineColor(sf::Color::Red);
 	shape->setOutlineThickness(2);
 	NuEntity* player = new NuEntity (shape, 4.0f, 8.0f);
-
-	
+	player->cx = 5;
+	player->cy = 5;
+	player->syncSprite();
 	
 	ImGui::SFML::Init(window);
 
@@ -60,16 +70,18 @@ int main() {
 		/*float deltaX = dt * 450;
 		float deltaY = dt * 450;*/
 		bool keyHit = false;
+		float max_speed_x = 10;
+		float max_speed_y = 10;
 
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 			keyHit = true;
-			player->dx -= 2;
-			
+			player->dx -= 10;
+						
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 			keyHit = true;
-			player->dx += 5;
+			player->dx += 10;
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			keyHit = true;
@@ -77,12 +89,18 @@ int main() {
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
 			keyHit = true;
-			player->dy -= 2;
+			player->dy -= 10;
 		}
+
+		player->dx = clamp(player->dx, -10, 10);
+		player->dy = clamp(player->dy, -10, 10);
+
 		if (keyHit) {
 
 
 		}
+
+
 		ImGui::SFML::Update(window, sf::milliseconds((int)(dt * 1000)));
 		player->im();
 		player->update(dt);

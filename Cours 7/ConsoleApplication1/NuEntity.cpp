@@ -26,6 +26,11 @@ void NuEntity::im() {
 	modified |= DragFloat("cy", &cy, 1.0);
 	modified |= DragFloat("rx", &rx, 0.05);
 	modified |= DragFloat("ry", &ry, 0.05);
+	modified |= DragFloat("dx", &dx, 0.05);
+	modified |= DragFloat("dy", &dy, 0.05);
+	modified |= DragFloat("fric_x", &fric_x, 0.05);
+	modified |= DragFloat("fric_y", &fric_y, 0.05);
+
 	if (modified) {
 		syncSprite();
 	}
@@ -33,34 +38,79 @@ void NuEntity::im() {
 	Value("py", float(py));
 
 }
+bool NuEntity:: isColliding(int ccx, int ccy) {
+	if (ccx < 0) {
+		return true;
+	}
+	if (ccy >= 1280 / stride) {
+		return true;
+	}
+	if (ccx < 0) {
+		return true;
+	}
+	if (ccy >= 720 / stride) {
+		return true;
+	}
 
+	return false;
+}
 void NuEntity:: update(double dt) {
 
+	
 
-	dx *= fric;
-	rx = dx * dt;
+	rx += dx * dt;
 
 
-	while (rx > 1) {
-		rx--;
-		cx++;
+	while (rx >= 1) {
+		if (isColliding(cx + 1, cy)) {
+			dx = 0;
+			rx = 0.9;
+		}
+		else {
+			rx--;
+			cx++;
+		}
 	}
-	while (rx < 0) {
-		rx++;
-		cx--;
-	}
 
-	/*dy *= fric;
-	ry = dy * dt;
+	while (rx <= 0) {
+		if (isColliding(cx - 1, cy)) {
+			dx = 0;
+			rx = 0.1;
+		}
 
-	while (ry > 1) {
-		ry--;
-		cy++;
+		else {
+			rx++;
+			cx--;
+		}
 	}
-	while (ry < 0) {
-		ry++;
-		cy--;
-	}*/
+	dx *= pow(fric_x, dt * 60);
+
+	
+	ry += dy * dt;
+
+	while (ry >= 1) {
+		if (isColliding(cx, cy + 1)) {
+			dy = 0;
+			ry = 0.9;
+		}
+		else {
+			
+			ry--;
+			cy++;
+		}
+	}
+	while (ry <= 0) {
+		if (isColliding(cx, cy - 1)) {
+			dy = 0;
+			ry = 0.1;
+		}
+		else {
+
+			ry++;
+			cy--;
+		}
+	}
+	dy *= pow(fric_y, dt * 60);
 
 	syncSprite();
 }

@@ -12,7 +12,8 @@ class NuEntity {
 public:
 
 	sf::Shape*		 spr = nullptr;
-	float fric = 0.98f;
+	float fric_x = 0.98f;
+	float fric_y = 0.98f;
 
 	sf::Vector2f lastGoodPosition;
 	
@@ -30,10 +31,10 @@ public:
 	float xx;
 	float yy;
 
-	float dx;
-	float dy;
+	float dx = 0;
+	float dy = 0;
 
-	static const int stride;
+	const  static int stride = 32;
 
 	NuEntity(sf::Shape* _spr, float _cx, float _cy) {
 		spr = _spr;
@@ -62,6 +63,7 @@ public:
 		return spr->setPosition(pos);
 	}
 
+	bool isColliding(int _cx, int _cy);
 	virtual void update(double dt);
 	virtual void draw(sf::RenderWindow& win);
 
