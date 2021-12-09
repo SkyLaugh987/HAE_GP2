@@ -3,7 +3,7 @@
 #include <vector>
 #include"imgui.h"
 #include "imgui-SFML.h"
-
+#include"Game.hpp"
 
 /*NuEntity::NuEntity() {
 
@@ -30,6 +30,8 @@ void NuEntity::im() {
 	modified |= DragFloat("dy", &dy, 0.05);
 	modified |= DragFloat("fric_x", &fric_x, 0.05);
 	modified |= DragFloat("fric_y", &fric_y, 0.05);
+	modified |= DragFloat("gx", &gx, 1.0);
+
 
 	if (modified) {
 		syncSprite();
@@ -42,16 +44,20 @@ bool NuEntity:: isColliding(int ccx, int ccy) {
 	if (ccx < 0) {
 		return true;
 	}
-	if (ccy >= 1280 / stride) {
+	if (ccx > 1280 / stride) {
 		return true;
 	}
-	if (ccx < 0) {
+	if (ccy < 0) {
 		return true;
 	}
-	if (ccy >= 720 / stride) {
+	if (ccy > 720 / stride) {
 		return true;
 	}
 
+	for(auto& vi : Game::walls )
+		if ((vi.x == ccx) && (vi.y == ccy)) {
+			return true;
+		}
 	return false;
 }
 void NuEntity:: update(double dt) {
@@ -111,7 +117,7 @@ void NuEntity:: update(double dt) {
 		}
 	}
 	dy *= pow(fric_y, dt * 60);
-
+	dy += gx;
 	syncSprite();
 }
 

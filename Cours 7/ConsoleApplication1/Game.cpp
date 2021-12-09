@@ -30,14 +30,13 @@ void Game::update(double dt) {
 } 
 
 void Game::render(sf::RenderWindow& win) {
-	if (player) player->draw(win);
-
 	sf::RectangleShape rs(sf::Vector2f(NuEntity::stride, NuEntity::stride));
 	rs.setOutlineThickness(1);
 	rs.setOutlineColor(sf::Color::Red);
-	for (auto v : walls) {
+	for (auto& v : walls) {
 		rs.setPosition(v.x * NuEntity::stride, v.y * NuEntity::stride);
 		win.draw(rs);
 	}
 
+	if (player) player->draw(win);
 }

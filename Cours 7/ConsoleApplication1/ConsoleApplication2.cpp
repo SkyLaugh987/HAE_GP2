@@ -19,6 +19,7 @@
 #include "Particle.hpp"
 #include "NuEntity.hpp"
 #include "World.hpp"
+#include "Game.hpp"
 
 float clamp(float val, float a, float b) {
 	if (val < a)
@@ -51,6 +52,10 @@ int main() {
 	double tStart = getTimeStamp();
 	double tEnterFrame = getTimeStamp();
 	double tExitFrame = getTimeStamp();
+
+	bool mouseLeftWasPressed = false;
+	double timer = 0.0;
+
 	sf::Vector2i winPos = window.getPosition();
 
 
@@ -60,11 +65,41 @@ int main() {
 		tEnterFrame = getTimeStamp();
 
 		while (window.pollEvent(event)) {
+
 			ImGui::SFML::ProcessEvent(window, event);
+
 			if (event.type == sf::Event::Closed)
 				window.close();
+
+			if (event.type == sf::Event::MouseButtonPressed) {
+				auto cx = event.mouseButton.x / NuEntity::stride;
+				auto cy = event.mouseButton.y / NuEntity::stride;
+				int pos = -1;
+				int idx = 0;
+
+				for (auto& v : Game::walls) {
+					if (v.x == cx && v.y == cy)
+						pos = idx;
+					idx++;
+				}
+
+				if (pos < 0)
+					Game::walls.push_back(sf::Vector2i(cx, cy));
+				else
+					Game::walls.erase(Game::walls.begin() + pos);
+			}
 		}
 		
+
+		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);
+
+		sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
+
+		if (mouseLeftIsPressed && !mouseLeftWasPressed) {
+
+		}
+
 		
 		auto pos = player->getPosition();
 		/*float deltaX = dt * 450;
@@ -89,16 +124,17 @@ int main() {
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
 			keyHit = true;
-			player->dy -= 10;
+			player->dy -= 20000;
 		}
+
 
 		player->dx = clamp(player->dx, -10, 10);
 		player->dy = clamp(player->dy, -10, 10);
 
-		if (keyHit) {
-
-
-		}
+		if (mouseLeftIsPressed)
+			mouseLeftWasPressed = true;
+		else
+			mouseLeftWasPressed = false;
 
 
 		ImGui::SFML::Update(window, sf::milliseconds((int)(dt * 1000)));
@@ -107,7 +143,11 @@ int main() {
 
 		
 		window.clear();
+
+
 		player->draw(window);
+		Game::render(window);
+
 		ImGui::SFML::Render(window);
 		window.display();
 		tExitFrame = getTimeStamp();

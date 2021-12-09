@@ -34,6 +34,7 @@ public:
 	float dx = 0;
 	float dy = 0;
 
+	float gx = 9.8f;
 	const  static int stride = 32;
 
 	NuEntity(sf::Shape* _spr, float _cx, float _cy) {
