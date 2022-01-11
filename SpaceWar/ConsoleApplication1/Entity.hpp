@@ -2,12 +2,13 @@
 #include "SFML/Graphics/Shape.hpp"
 #include "SFML/Graphics/Rect.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
+#include "SFML/Graphics/CircleShape.hpp"
 
 enum EType {
 	PlayerObject,
 	Brick,
 	Wall,
-	Ball,
+	Bullet,
 };
 
 class Entity {
@@ -25,6 +26,7 @@ public:
 		type = _type;
 		spr = _spr;
 	}
+	Entity();
 
 	~Entity() {
 		if (spr) {
@@ -52,7 +54,7 @@ public:
 class Player : public Entity {
 public:
 
-	Entity* currentBall = nullptr;
+	
 
 	Player(EType type, sf::Shape* _spr) : Entity(type, _spr) {
 
@@ -61,4 +63,26 @@ public:
 
 	virtual void update(double dt);
 	virtual void draw(sf::RenderWindow& win);
+};
+
+class BulletEntity : public Entity {
+public:
+
+	sf::CircleShape b;
+
+	std::vector<float>	px;
+	std::vector<float>	py;
+
+	std::vector<float>	dx;
+	std::vector<float>	dy;
+
+	std::vector<bool>	alive;
+
+	BulletEntity();
+
+	void create(float px, float py, float dx, float dy);
+	void update(double dt);
+
+	void draw(sf::RenderWindow& win);
+
 };

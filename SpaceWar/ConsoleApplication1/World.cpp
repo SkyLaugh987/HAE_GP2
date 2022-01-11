@@ -27,7 +27,7 @@ void World::update(double dt) {
 		if (e->type == PlayerObject)
 			pad = (Player*)e;
 
-		if (e->type == Ball) {
+		if (e->type == Bullet) {
 			for (int j = 0; j < data.size(); ++j) {
 				auto oe = data[j];
 				if (oe->type == Wall) {
@@ -36,7 +36,7 @@ void World::update(double dt) {
 			}
 		}
 
-		if (e->type == Ball) {
+		if (e->type == Bullet) {
 			for (int j = 0; j < data.size(); ++j) {
 				auto oe = data[j];
 				if (oe->type == Brick) {
@@ -44,18 +44,11 @@ void World::update(double dt) {
 				}
 			}
 		}
-		if ((e->type == Ball) && (pad->currentBall == nullptr)) {
-			for (int j = 0; j < data.size(); ++j) {
-				auto oe = data[j];
-				if (oe->type == PlayerObject) {
-					collidePadBall(oe, e);
-				}
-			}
-		}
+
 		idx++;
 	}
 
-	for (auto e : data) {
+	/*for (auto e : data) {
 		e->lastGoodPosition = e->getPosition();
 		if (e->type == Ball) {
 			if (e->getPosition().y > 1024) {
@@ -63,7 +56,7 @@ void World::update(double dt) {
 				pad->currentBall = e;
 			};
 		}
-	}
+	}*/
 
 	if (toBreakBrick.size()) {
 		for (auto b : toBreakBrick) {

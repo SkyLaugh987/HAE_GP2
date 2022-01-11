@@ -65,18 +65,9 @@ int main() {
 	double tEnterFrame = getTimeStamp();
 	double tExitFrame = getTimeStamp();
 
-
-	int ballSize = 6;
-	sf::CircleShape* ballShape = new sf::CircleShape(ballSize);
-	ballShape->setOrigin(ballSize, ballSize);
-	ballShape->setOutlineThickness(2);
-	ballShape->setFillColor(sf::Color::Yellow);
-	ballShape->setOutlineColor(sf::Color::Red);
-
-	Player* player = new Player(EType::PlayerObject, ship);
-	Entity* ball = new Entity(EType::Ball, ballShape);
-	ball->setPosition(canon->getPosition() + sf::Vector2f(0,50));
 	
+	Player* player = new Player(EType::PlayerObject, ship);
+	BulletEntity bullets;
 
 
 	auto vWallShapeLeft = new sf::RectangleShape(sf::Vector2f(16, 2048));
@@ -101,10 +92,9 @@ int main() {
 	world.data.push_back(rightWall);
 	world.data.push_back(leftWall);
 	world.data.push_back(player);
-	world.data.push_back(ball);
 
-	player->currentBall = ball;
 
+	
 	bool mouseLeftWasPressed = false;
 	Curve c;
 
@@ -156,7 +146,9 @@ int main() {
 		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);
 
+
 		sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
+
 
 		if (false) {
 			if (mouseIsReleased) c.addPoint(mousePos);
@@ -173,17 +165,10 @@ int main() {
 				dxy = dir / dirLen;
 			}
 
-			dxy *= 60.0f * 8;
+			dxy *= 60.0f * 10;
+			bullets.create(pos.x, pos.y, dxy.x, dxy.y);
 
-			if (player->currentBall) {
-				auto ball = player->currentBall;
-				ball->dx = dxy.x;
-				ball->dy = dxy.y;
-				float push = 0.1;
-				ball->setPosition(sf::Vector2f(ball->getPosition().x, player->getPosition().y - 16));
-			}
-
-			player->currentBall = nullptr;
+			
 		}
 
 
@@ -214,8 +199,12 @@ int main() {
 		///// U P D A T E /////
 		Game::parts.update(dt);
 		world.update(dt);
+		bullets.update(dt);
 
+
+		///// D R A W /////
 		world.draw(window);
+		bullets.draw(window);
 		window.draw(*canon);
 
 		c.draw(window);
