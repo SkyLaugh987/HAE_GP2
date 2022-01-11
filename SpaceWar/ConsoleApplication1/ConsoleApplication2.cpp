@@ -20,6 +20,7 @@
 #include "Entity.hpp"
 #include "Game.hpp"
 #include "World.hpp"
+#include "Curve.hpp"
 
 
 
@@ -47,13 +48,23 @@ int main() {
 	ship->setOutlineThickness(2);
 	ship->setOutlineColor(sf::Color::Magenta);
 	ship->setPosition(800, 600);
-	ship->setOrigin(20, 20);
+	ship->setOrigin(40, 40);
 
-	sf::RectangleShape* canon = new sf::RectangleShape(sf::Vector2f(5, 35));
+	sf::RectangleShape* canon = new sf::RectangleShape(sf::Vector2f(20, 50));
 	canon->setFillColor(sf::Color::Magenta);
 	canon->setOutlineThickness(2);
 	canon->setOutlineColor(sf::Color::Cyan);
-	canon->setOrigin(2, 0);
+	canon->setOrigin(10, 0);
+
+	sf::CircleShape ptr(8);
+	ptr.setFillColor(sf::Color::Cyan);
+	ptr.setOrigin(4, 4);
+
+
+	double tStart = getTimeStamp();
+	double tEnterFrame = getTimeStamp();
+	double tExitFrame = getTimeStamp();
+
 
 	int ballSize = 6;
 	sf::CircleShape* ballShape = new sf::CircleShape(ballSize);
@@ -62,15 +73,10 @@ int main() {
 	ballShape->setFillColor(sf::Color::Yellow);
 	ballShape->setOutlineColor(sf::Color::Red);
 
-
-	double tStart = getTimeStamp();
-	double tEnterFrame = getTimeStamp();
-	double tExitFrame = getTimeStamp();
-
-
 	Player* player = new Player(EType::PlayerObject, ship);
 	Entity* ball = new Entity(EType::Ball, ballShape);
-	ball->setPosition(player->getPosition());
+	ball->setPosition(canon->getPosition() + sf::Vector2f(0,50));
+	
 
 
 	auto vWallShapeLeft = new sf::RectangleShape(sf::Vector2f(16, 2048));
@@ -97,6 +103,12 @@ int main() {
 	world.data.push_back(player);
 	world.data.push_back(ball);
 
+	player->currentBall = ball;
+
+	bool mouseLeftWasPressed = false;
+	Curve c;
+
+
 	while (window.isOpen()) {
 		sf::Event event;
 		double dt = tExitFrame - tEnterFrame;
@@ -110,9 +122,86 @@ int main() {
 				window.close();
 		}
 		
+		auto pos = player->getPosition();
+		float deltaX = dt * 160 * 6;
+		float deltaY = dt * 160 * 6;
+		bool keyHit = false;
 
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+			pos.x -= deltaX;
+			keyHit = true;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			pos.x += deltaX;
+			keyHit = true;
+		}if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+			pos.y -= deltaX;
+			keyHit = true;
+		}if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			pos.y += deltaX;
+			keyHit = true;
+		}
 
+
+		if (keyHit) {
+			if (pos.x < 0)
+				pos.x = 0;
+			if (pos.x > window.getSize().x)
+				pos.x = window.getSize().x;
+			player->setPosition(pos);
+		}
+
+
+		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);
+
+		sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
+
+		if (false) {
+			if (mouseIsReleased) c.addPoint(mousePos);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) c.clear();
+		}
+
+		if (mouseLeftIsPressed && !mouseLeftWasPressed) {
+			auto pos = canon->getPosition();
+			auto dir = mousePos - pos;
+			float dirLen = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+			sf::Vector2f dxy(1, 0);
+
+			if (dirLen) {
+				dxy = dir / dirLen;
+			}
+
+			dxy *= 60.0f * 8;
+
+			if (player->currentBall) {
+				auto ball = player->currentBall;
+				ball->dx = dxy.x;
+				ball->dy = dxy.y;
+				float push = 0.1;
+				ball->setPosition(sf::Vector2f(ball->getPosition().x, player->getPosition().y - 16));
+			}
+
+			player->currentBall = nullptr;
+		}
+
+
+		if (mouseLeftIsPressed)
+			mouseLeftWasPressed = true;
+		else
+			mouseLeftWasPressed = false;
+
+
+		sf::Vector2f characterToMouse(
+			mousePos.y - ship->getPosition().y,
+			mousePos.x - ship->getPosition().x);
+
+		float radToDeg = 57.2958;
+		float angleC2M = atan2(characterToMouse.y, characterToMouse.x);
+		canon->setRotation(-angleC2M * radToDeg);
+		canon->setPosition(ship->getPosition());
+		ptr.setPosition(mousePos);
 
 
 
@@ -127,8 +216,10 @@ int main() {
 		world.update(dt);
 
 		world.draw(window);
+		window.draw(*canon);
 
-		
+		c.draw(window);
+		window.draw(ptr);
 
 		ImGui::SFML::Render(window);
 		window.display();
