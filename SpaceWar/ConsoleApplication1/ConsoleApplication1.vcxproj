@@ -159,7 +159,6 @@
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Int64Array.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
