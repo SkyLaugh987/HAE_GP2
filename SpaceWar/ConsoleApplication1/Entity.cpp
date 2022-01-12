@@ -36,6 +36,7 @@ void BulletEntity::create(float _px, float _py, float _dx, float _dy) {
 			dx[i] = _dx;
 			dy[i] = _dy;
 			alive[i] = true;
+			hit[i] = false;
 			lastGoodPosition_B[i] = sf::Vector2f(_px, _py);
 			return;
 		}
@@ -46,6 +47,7 @@ void BulletEntity::create(float _px, float _py, float _dx, float _dy) {
 	dy.push_back(_dy);
 	lastGoodPosition_B.push_back(sf::Vector2f(_px, _py));
 	alive.push_back(true);
+	hit.push_back(false);
 }
 
 void BulletEntity::update(double dt) {

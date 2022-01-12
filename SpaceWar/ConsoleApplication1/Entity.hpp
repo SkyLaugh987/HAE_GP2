@@ -79,6 +79,7 @@ public:
 	std::vector<sf::Vector2f>	lastGoodPosition_B;
 
 	std::vector<bool>	alive;
+	std::vector<bool>	hit;
 
 	BulletEntity(EType _type, sf::Shape* b) : Entity(type, spr) {
 		type = _type;
@@ -92,6 +93,8 @@ public:
 
 };
 
+
+////// E N  E M Y /////
 class EnnemyEntity : public Entity {
 public:
 
@@ -106,6 +109,8 @@ public:
 	std::vector<sf::Vector2f>	lastGoodPosition_E;
 
 	std::vector<bool>	alive;
+
+
 
 	EnnemyEntity(EType _type, sf::Shape* _e) : Entity(type, spr) {
 		type = _type;

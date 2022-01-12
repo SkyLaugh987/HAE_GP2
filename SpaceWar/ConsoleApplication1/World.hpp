@@ -24,9 +24,9 @@ public:
 
 	void collideWallBullet(Entity* wall, BulletEntity* ball);
 	void collideWallEnnemy(Entity* wall, EnnemyEntity* ball);
-	void collideEnnemyBullet(Entity* wall, Entity* ball);
+	void collideEnnemyBullet(EnnemyEntity* wall, BulletEntity* ball);
 	void collidePlayerEnnemy(Entity* player, Entity* ennemy);
-	void collideEnnemyEnnemy(Entity* A, Entity* B);
+	void collideEnnemyEnnemy(EnnemyEntity* A, EnnemyEntity* B);
 
 	std::vector<Entity*> toBreakEntity;
 };
