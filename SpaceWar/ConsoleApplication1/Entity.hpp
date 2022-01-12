@@ -6,7 +6,7 @@
 
 enum EType {
 	PlayerObject,
-	Brick,
+	Ennemy,
 	Wall,
 	Bullet,
 };
@@ -26,7 +26,7 @@ public:
 		type = _type;
 		spr = _spr;
 	}
-	Entity();
+	
 
 	~Entity() {
 		if (spr) {
@@ -68,7 +68,7 @@ public:
 class BulletEntity : public Entity {
 public:
 
-	sf::CircleShape b;
+	float radius = 10;
 
 	std::vector<float>	px;
 	std::vector<float>	py;
@@ -76,9 +76,14 @@ public:
 	std::vector<float>	dx;
 	std::vector<float>	dy;
 
+	std::vector<sf::Vector2f>	lastGoodPosition_B;
+
 	std::vector<bool>	alive;
 
-	BulletEntity();
+	BulletEntity(EType _type, sf::Shape* b) : Entity(type, spr) {
+		type = _type;
+		spr = b;
+	}
 
 	void create(float px, float py, float dx, float dy);
 	void update(double dt);

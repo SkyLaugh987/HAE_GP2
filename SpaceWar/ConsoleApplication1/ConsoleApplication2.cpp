@@ -56,6 +56,13 @@ int main() {
 	canon->setOutlineColor(sf::Color::Cyan);
 	canon->setOrigin(10, 0);
 
+	int t = 10;
+	sf::CircleShape* bullets = new sf::CircleShape(t);
+	bullets->setOutlineThickness(2);
+	bullets->setFillColor(sf::Color::Yellow);
+	bullets->setOutlineColor(sf::Color::Red);
+	bullets->setOrigin(sf::Vector2f(t, t));
+
 	sf::CircleShape ptr(8);
 	ptr.setFillColor(sf::Color::Cyan);
 	ptr.setOrigin(4, 4);
@@ -67,7 +74,7 @@ int main() {
 
 	
 	Player* player = new Player(EType::PlayerObject, ship);
-	BulletEntity bullets;
+	BulletEntity* bullet = new BulletEntity(EType::Bullet, bullets);
 
 
 	auto vWallShapeLeft = new sf::RectangleShape(sf::Vector2f(16, 2048));
@@ -92,7 +99,7 @@ int main() {
 	world.data.push_back(rightWall);
 	world.data.push_back(leftWall);
 	world.data.push_back(player);
-
+	world.data.push_back(bullet);
 
 	
 	bool mouseLeftWasPressed = false;
@@ -166,7 +173,7 @@ int main() {
 			}
 
 			dxy *= 60.0f * 10;
-			bullets.create(pos.x, pos.y, dxy.x, dxy.y);
+			bullet->create(pos.x, pos.y, dxy.x, dxy.y);
 
 			
 		}
@@ -199,12 +206,11 @@ int main() {
 		///// U P D A T E /////
 		Game::parts.update(dt);
 		world.update(dt);
-		bullets.update(dt);
+
 
 
 		///// D R A W /////
 		world.draw(window);
-		bullets.draw(window);
 		window.draw(*canon);
 
 		c.draw(window);

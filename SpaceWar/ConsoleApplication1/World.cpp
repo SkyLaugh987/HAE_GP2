@@ -9,13 +9,10 @@ void World::update(double dt) {
 	if (audio == nullptr)
 		audio = new Audio();
 
-	Player* pad = nullptr;
-	int idx = 0;
-	for (auto e : data) {
-		if (e->type == PlayerObject) {
-			pad = (Player*)e;
-		}
-	}
+	Player* player = nullptr;
+	BulletEntity* bullet = nullptr;
+
+	
 
 	for (auto e : data) {
 		Vector2f predPos = e->getPosition();
@@ -25,83 +22,98 @@ void World::update(double dt) {
 		e->update(dt);
 
 		if (e->type == PlayerObject)
-			pad = (Player*)e;
+			player = (Player*)e;
 
+		
 		if (e->type == Bullet) {
+			 bullet = (BulletEntity*)e;
+			 for (int i = 0; i < bullet->px.size(); i++)
+			 {
+				 bullet->lastGoodPosition_B[i] = Vector2f(bullet->px[i], bullet->py[i]);
+			 }
 			for (int j = 0; j < data.size(); ++j) {
 				auto oe = data[j];
 				if (oe->type == Wall) {
-					collideWallBall(oe, e);
+					collideWallBullet(oe, bullet);
 				}
 			}
 		}
 
-		if (e->type == Bullet) {
+		/*if (e->type == Bullet) {
 			for (int j = 0; j < data.size(); ++j) {
 				auto oe = data[j];
-				if (oe->type == Brick) {
-					collideBrickBall(oe, e);
+				if (oe->type == Ennemy) {
+					collideEnnemyBullet(oe, e);
 				}
 			}
 		}
+		if (e->type == Ennemy) {
+			for (int j = 0; j < data.size(); ++j) {
+				auto oe = data[j];
+				if (oe->type == PlayerObject) {
+					collidePlayerEnnemy(oe, e);
+				}
+			}
+		}*/
 
-		idx++;
+		for (auto e : data) {
+			if (e->type == Bullet) {
+				if (e->getPosition().y > 1024) {
+					toBreakEntity.push_back(bullet);
+				};
+			}
+		}
+
 	}
 
-	/*for (auto e : data) {
-		e->lastGoodPosition = e->getPosition();
-		if (e->type == Ball) {
-			if (e->getPosition().y > 1024) {
-				e->setPosition(pad->getPosition());
-				pad->currentBall = e;
-			};
-		}
-	}*/
 
-	if (toBreakBrick.size()) {
-		for (auto b : toBreakBrick) {
+	if (toBreakEntity.size()) {
+		for (auto b : toBreakEntity) {
 			auto iter = std::find(data.begin(), data.end(), b);
 			if (iter != data.end())
 				data.erase(iter);
 			delete b;
 		}
-		toBreakBrick.clear();
+		toBreakEntity.clear();
 	}
 }
 
-void World::collidePadBall(Entity* brick, Entity* ball) {
-	sf::Vector2f pos = ball->getPosition();
-	if (brick->getBoundingBox().contains(pos)) {
-		auto oldPos = ball->lastGoodPosition;
-		auto box = brick->getBoundingBox();
-		if ((oldPos.y < box.top) || (oldPos.y > (box.top + box.height))) {
-			ball->dy = -ball->dy;
-		}
-		else {
-			ball->dx = -ball->dx;
+
+void World::collideWallBullet(Entity* wall, BulletEntity* bullet) {
+	auto oe = wall;
+	auto e = bullet;
+	for (int i = 0; i < e->px.size(); i++)
+	{
+		Vector2f bulletPos = Vector2f(e->px[i], e->py[i]);
+		if (oe->getBoundingBox().contains(bulletPos)) {
+			audio->ballPong.play();
+			//determiner si le rebond est sur l'axe vert ou horiz
+			e->px[i] = e->lastGoodPosition_B[i].x;
+			e->py[i] = e->lastGoodPosition_B[i].y;
+
+			if (oe->spr->getGlobalBounds().width > oe->spr->getGlobalBounds().height) {
+				//mur haut bass
+				e->dy[i] = -e->dy[i];
+			}
+			else {
+				//mur gauche droite
+				e->dx[i] = -e->dx[i];
+			}
 		}
 
-
-		ball->setPosition(ball->lastGoodPosition);
 	}
 }
 
-void World::collideBrickBall(Entity* brick, Entity* ball) {
-	sf::Vector2f pos = ball->getPosition();
-	if (brick->getBoundingBox().contains(pos)) {
-		auto oldPos = ball->lastGoodPosition;
-		auto box = brick->getBoundingBox();
-		if ((oldPos.y < box.top) || (oldPos.y > (box.top + box.height))) {
-			ball->dy = -ball->dy;
-		}
-		else {
-			ball->dx = -ball->dx;
-		}
+
+void World::collideEnnemyBullet(Entity* ennemy, Entity* bullet) {
+	sf::Vector2f pos = bullet->getPosition();
+	if (ennemy->getBoundingBox().contains(pos)) {
+		
 		audio->ballPong.play();
-		ball->setPosition(ball->lastGoodPosition);
-		toBreakBrick.push_back(brick);
+		toBreakEntity.push_back(bullet);
+		toBreakEntity.push_back(ennemy);
 		for (int i = 0; i < 12; ++i)
-			Game::particlesAt(brick->getPosition());
+			Game::particlesAt(ennemy->getPosition());
 		Game::score += 100;
 		Game::shake = 30;
 		audio->ballPong.play();
@@ -109,23 +121,41 @@ void World::collideBrickBall(Entity* brick, Entity* ball) {
 	}
 }
 
-void World::collideWallBall(Entity* wall, Entity* ball) {
-	auto e = wall;
-	auto oe = ball;
-	if (e->getBoundingBox().contains(oe->getPosition())) {
+
+void World::collidePlayerEnnemy(Entity* player, Entity* ennemy) {
+	sf::Vector2f pos = player->getPosition();
+	if (ennemy->getBoundingBox().contains(pos)) {
+
 		audio->ballPong.play();
-		//determiner si le rebond est sur l'axe vert ou horiz
-		oe->setPosition(oe->lastGoodPosition);
-		if (e->spr->getGlobalBounds().width > e->spr->getGlobalBounds().height) {
-			//mur haut bass
-			oe->dy = -oe->dy;
-		}
-		else {
-			//mur gauche droite
-			oe->dx = -oe->dx;
-		}
+		toBreakEntity.push_back(player);
+		toBreakEntity.push_back(ennemy);
+		for (int i = 0; i < 12; ++i)
+			Game::particlesAt(ennemy->getPosition());
+		Game::score += 100;
+		Game::shake = 30;
+		audio->ballPong.play();
+
 	}
 }
+
+
+void World::collideEnnemyEnnemy(Entity* A, Entity* B) {
+	sf::Vector2f pos = B->getPosition();
+	if (A->getBoundingBox().contains(pos)) {
+		auto oldPos = B->lastGoodPosition;
+		auto box = A->getBoundingBox();
+		if ((oldPos.y < box.top) || (oldPos.y > (box.top + box.height))) {
+			B->dy = -B->dy;
+		}
+		else {
+			B->dx = -B->dx;
+		}
+
+
+		B->setPosition(B->lastGoodPosition);
+	}
+}
+
 
 void World::draw(sf::RenderWindow& win)
 {

@@ -22,9 +22,10 @@ public:
 	void update(double dt);
 	void draw(sf::RenderWindow& win);
 
-	void collideWallBall(Entity* wall, Entity* ball);
-	void collideBrickBall(Entity* wall, Entity* ball);
-	void collidePadBall(Entity* pad, Entity* ball);
+	void collideWallBullet(Entity* wall, BulletEntity* ball);
+	void collideEnnemyBullet(Entity* wall, Entity* ball);
+	void collidePlayerEnnemy(Entity* player, Entity* ennemy);
+	void collideEnnemyEnnemy(Entity* A, Entity* B);
 
-	std::vector<Entity*> toBreakBrick;
+	std::vector<Entity*> toBreakEntity;
 };

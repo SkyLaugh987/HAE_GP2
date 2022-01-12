@@ -3,9 +3,7 @@
 
 using namespace sf;
 
-Entity::Entity() {
 
-}
 
 void Entity::update(double dt) {
 	auto pos = getPosition();
@@ -29,14 +27,6 @@ void Player::draw(sf::RenderWindow& win) {
 
 }
 
-BulletEntity::BulletEntity() {
-	int t = 10;
-	b = sf::CircleShape(t);
-	b.setOutlineThickness(2);
-	b.setFillColor(sf::Color::Yellow);
-	b.setOutlineColor(sf::Color::Red);
-	b.setOrigin(sf::Vector2f(t, t));
-}
 
 void BulletEntity::create(float _px, float _py, float _dx, float _dy) {
 	for (int i = 0; i < px.size(); ++i) {
@@ -46,6 +36,7 @@ void BulletEntity::create(float _px, float _py, float _dx, float _dy) {
 			dx[i] = _dx;
 			dy[i] = _dy;
 			alive[i] = true;
+			lastGoodPosition_B[i] = sf::Vector2f(_px, _py);
 			return;
 		}
 	}
@@ -53,6 +44,7 @@ void BulletEntity::create(float _px, float _py, float _dx, float _dy) {
 	py.push_back(_py);
 	dx.push_back(_dx);
 	dy.push_back(_dy);
+	lastGoodPosition_B.push_back(sf::Vector2f(_px, _py));
 	alive.push_back(true);
 }
 
@@ -75,8 +67,8 @@ void BulletEntity::draw(sf::RenderWindow& win) {
 	const int sz = px.size();
 	while (idx < sz) {
 		if (alive[idx]) {
-			b.setPosition(px[idx], py[idx]);
-			win.draw(b);
+			spr->setPosition(px[idx], py[idx]);
+			win.draw(*spr);
 		}
 		idx++;
 	}
