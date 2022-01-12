@@ -63,6 +63,14 @@ int main() {
 	bullets->setOutlineColor(sf::Color::Red);
 	bullets->setOrigin(sf::Vector2f(t, t));
 
+	int p = 10;
+	sf::CircleShape* ennemies = new sf::CircleShape(p);
+	ennemies->setOutlineThickness(2);
+	ennemies->setFillColor(sf::Color::Red);
+	ennemies->setOutlineColor(sf::Color::Yellow);
+	ennemies->setOrigin(sf::Vector2f(p, p));
+
+
 	sf::CircleShape ptr(8);
 	ptr.setFillColor(sf::Color::Cyan);
 	ptr.setOrigin(4, 4);
@@ -75,6 +83,7 @@ int main() {
 	
 	Player* player = new Player(EType::PlayerObject, ship);
 	BulletEntity* bullet = new BulletEntity(EType::Bullet, bullets);
+	EnnemyEntity* ennemy = new EnnemyEntity(EType::Ennemy, ennemies);
 
 
 	auto vWallShapeLeft = new sf::RectangleShape(sf::Vector2f(16, 2048));
@@ -91,15 +100,21 @@ int main() {
 	vWallShapeTop->setOrigin(0, 8);
 	vWallShapeTop->setFillColor(sf::Color::Green);
 
+	auto vWallShapeBot = new sf::RectangleShape(*vWallShapeTop);
+
 	Entity* topWall = new Entity(EType::Wall, vWallShapeTop);
+	Entity* botWall = new Entity(EType::Wall, vWallShapeBot);
 	topWall->setPosition(sf::Vector2f(0, 0));
+	botWall->setPosition(sf::Vector2f(0, 720));
 
 	World world;
-	world.data.push_back(topWall);
-	world.data.push_back(rightWall);
 	world.data.push_back(leftWall);
+	world.data.push_back(rightWall);
+	world.data.push_back(topWall);
+	world.data.push_back(botWall);
 	world.data.push_back(player);
 	world.data.push_back(bullet);
+	world.data.push_back(ennemy);
 
 	
 	bool mouseLeftWasPressed = false;
@@ -108,6 +123,7 @@ int main() {
 
 	while (window.isOpen()) {
 		sf::Event event;
+		sf::Clock timerRespawn;
 		double dt = tExitFrame - tEnterFrame;
 		tEnterFrame = getTimeStamp();
 
@@ -142,14 +158,24 @@ int main() {
 
 
 		if (keyHit) {
-			if (pos.x < 0)
-				pos.x = 0;
-			if (pos.x > window.getSize().x)
-				pos.x = window.getSize().x;
+			if (pos.x - 40 < 0)
+				pos.x = 40;
+
+			if (pos.x + 40 > window.getSize().x)
+				pos.x = window.getSize().x - 40;
+
+			if (pos.y - 40 < 0)
+				pos.y = 40;
+
+			if (pos.y + 40 > window.getSize().y)
+				pos.y = window.getSize().y - 40;
+
 			player->setPosition(pos);
 		}
 
 
+
+		///// S H O O T /////
 		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);
 
@@ -196,6 +222,27 @@ int main() {
 		ptr.setPosition(mousePos);
 
 
+		///// E N N E M I E S /////
+		sf::Time coolDown = timerRespawn.getElapsedTime();
+		if (coolDown.asSeconds() >= 5.0f) {
+
+			sf::Vector2f randPos1(rand()%100, rand()%100);
+			sf::Vector2f randPos2(rand() % 100, rand() % 100);
+
+			auto dir = randPos2 - randPos1  ;
+			float dirLen = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+			sf::Vector2f dxy(1, 0);
+
+			if (dirLen) {
+				dxy = dir / dirLen;
+			}
+
+			dxy *= 60.0f * 3;
+
+			ennemy->create(randPos1.x, randPos1.y, dxy.x, dxy.y);
+
+			timerRespawn.restart();
+		}
 
 
 

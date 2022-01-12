@@ -11,7 +11,7 @@ void World::update(double dt) {
 
 	Player* player = nullptr;
 	BulletEntity* bullet = nullptr;
-
+	EnnemyEntity* ennemy = nullptr;
 	
 
 	for (auto e : data) {
@@ -24,6 +24,8 @@ void World::update(double dt) {
 		if (e->type == PlayerObject)
 			player = (Player*)e;
 
+		if (e->type == Ennemy)
+			ennemy = (EnnemyEntity*)e;
 		
 		if (e->type == Bullet) {
 			 bullet = (BulletEntity*)e;
