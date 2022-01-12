@@ -224,10 +224,11 @@ int main() {
 
 		///// E N N E M I E S /////
 		sf::Time coolDown = timerRespawn.getElapsedTime();
-		if (coolDown.asSeconds() >= 5.0f) {
+		
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
 
-			sf::Vector2f randPos1(rand()%100, rand()%100);
-			sf::Vector2f randPos2(rand() % 100, rand() % 100);
+			sf::Vector2f randPos1(rand()%1200, rand()%700);
+			sf::Vector2f randPos2(rand() % 1200, rand() % 700);
 
 			auto dir = randPos2 - randPos1  ;
 			float dirLen = std::sqrt(dir.x * dir.x + dir.y * dir.y);

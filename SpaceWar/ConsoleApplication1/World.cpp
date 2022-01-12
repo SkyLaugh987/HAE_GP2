@@ -24,8 +24,19 @@ void World::update(double dt) {
 		if (e->type == PlayerObject)
 			player = (Player*)e;
 
-		if (e->type == Ennemy)
+		if (e->type == Ennemy) {
 			ennemy = (EnnemyEntity*)e;
+			for (int i = 0; i < ennemy->px.size(); i++)
+			{
+				ennemy->lastGoodPosition_E[i] = Vector2f(ennemy->px[i], ennemy->py[i]);
+			}
+			for (int j = 0; j < data.size(); ++j) {
+				auto oe = data[j];
+				if (oe->type == Wall) {
+					collideWallEnnemy(oe, ennemy);
+				}
+			}
+		}
 		
 		if (e->type == Bullet) {
 			 bullet = (BulletEntity*)e;
@@ -92,6 +103,31 @@ void World::collideWallBullet(Entity* wall, BulletEntity* bullet) {
 			//determiner si le rebond est sur l'axe vert ou horiz
 			e->px[i] = e->lastGoodPosition_B[i].x;
 			e->py[i] = e->lastGoodPosition_B[i].y;
+
+			if (oe->spr->getGlobalBounds().width > oe->spr->getGlobalBounds().height) {
+				//mur haut bass
+				e->dy[i] = -e->dy[i];
+			}
+			else {
+				//mur gauche droite
+				e->dx[i] = -e->dx[i];
+			}
+		}
+
+	}
+}
+
+void World::collideWallEnnemy(Entity* wall, EnnemyEntity* bullet) {
+	auto oe = wall;
+	auto e = bullet;
+	for (int i = 0; i < e->px.size(); i++)
+	{
+		Vector2f ennemyPos = Vector2f(e->px[i], e->py[i]);
+		if (oe->getBoundingBox().contains(ennemyPos)) {
+			audio->ballPong.play();
+			//determiner si le rebond est sur l'axe vert ou horiz
+			e->px[i] = e->lastGoodPosition_E[i].x;
+			e->py[i] = e->lastGoodPosition_E[i].y;
 
 			if (oe->spr->getGlobalBounds().width > oe->spr->getGlobalBounds().height) {
 				//mur haut bass

@@ -23,6 +23,7 @@ public:
 	void draw(sf::RenderWindow& win);
 
 	void collideWallBullet(Entity* wall, BulletEntity* ball);
+	void collideWallEnnemy(Entity* wall, EnnemyEntity* ball);
 	void collideEnnemyBullet(Entity* wall, Entity* ball);
 	void collidePlayerEnnemy(Entity* player, Entity* ennemy);
 	void collideEnnemyEnnemy(Entity* A, Entity* B);
