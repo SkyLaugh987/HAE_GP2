@@ -51,10 +51,13 @@ public:
 	virtual void draw(sf::RenderWindow& win);
 };
 
+
+///// P L A Y E R /////
 class Player : public Entity {
 public:
 
-	
+	bool hit  = false;
+	int HP = 5;
 
 	Player(EType type, sf::Shape* _spr) : Entity(type, _spr) {
 
@@ -65,6 +68,8 @@ public:
 	virtual void draw(sf::RenderWindow& win);
 };
 
+
+///// B U L L E T /////
 class BulletEntity : public Entity {
 public:
 

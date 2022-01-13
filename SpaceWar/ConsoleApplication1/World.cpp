@@ -191,20 +191,45 @@ void World::collideEnnemyBullet(EnnemyEntity* ennemy, BulletEntity* bullet) {
 }
 
 
-void World::collidePlayerEnnemy(Entity* player, Entity* ennemy) {
-	sf::Vector2f pos = player->getPosition();
-	if (ennemy->getBoundingBox().contains(pos)) {
+void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
+	auto oe = ennemy;
+	auto e = player;
+	Vector2f playerPos = e->getPosition();
+	if (ennemy == nullptr) return;
 
-		audio->ballPong.play();
-		toBreakEntity.push_back(player);
-		toBreakEntity.push_back(ennemy);
-		for (int i = 0; i < 12; ++i)
-			Game::particlesAt(ennemy->getPosition());
-		Game::score += 100;
-		Game::shake = 30;
-		audio->ballPong.play();
+		for (size_t j = 0; j < ennemy->px.size(); j++)
+		{
+			if (!player->hit) {
+				// Real distance check
+				auto dist = sqrt((playerPos.x - ennemy->px[j])*(playerPos.x - ennemy->px[j]) + (playerPos.y - ennemy->py[j])*(playerPos.y - ennemy->py[j]));
+				if (dist <= 10 /*radiusEnnemy*/ + 40 /*radiusPlayer*/) { //il y a overlapp
 
-	}
+					if (oe->type == Ennemy) {
+						audio->ballPong.play();
+
+						for (int i = 0; i < 12; ++i)
+							Game::particlesAt(ennemy->getPosition());
+						Game::score += 100;
+						Game::shake = 30;
+						audio->ballPong.play();
+
+						ennemy->alive[j] = false;						
+						player->hit = true;
+					}
+				}
+
+			}
+			if (player->hit) {
+
+				if (player->HP >= 0)
+					player->HP -= 1;
+				else if (player->HP <= 0) {
+					toBreakEntity.push_back(player);
+				}
+				player->hit = false;
+			}
+		}
+	
 }
 
 
