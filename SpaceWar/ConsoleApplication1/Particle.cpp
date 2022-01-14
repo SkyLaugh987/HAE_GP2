@@ -33,7 +33,7 @@ void Particle::update(double dt) {
 			px[i] += dx[i] * dt;
 			py[i] += dy[i] * dt;
 
-			dy[i] += (9.0f * 50.0) * dt;
+			dy[i] += (rand()%180 ) * dt ;
 
 			if (
 				(px[i] > 3000) || (px[i] < -100) ||

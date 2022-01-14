@@ -3,6 +3,7 @@
 
 class Game {
 public:
+
 	static int			shake;
 	static int			score;
 	static Particle		parts;

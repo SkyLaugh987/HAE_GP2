@@ -58,6 +58,7 @@ public:
 
 	bool hit  = false;
 	int HP = 5;
+	float						timer = 0;
 
 	Player(EType type, sf::Shape* _spr) : Entity(type, _spr) {
 

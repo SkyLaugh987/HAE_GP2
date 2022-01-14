@@ -12,7 +12,7 @@ void World::update(double dt) {
 	Player* player = nullptr;
 	BulletEntity* bullet = nullptr;
 	EnnemyEntity* ennemy = nullptr;
-	
+
 
 	for (auto e : data) {
 		Vector2f predPos = e->getPosition();
@@ -23,6 +23,13 @@ void World::update(double dt) {
 
 		if (e->type == PlayerObject)
 			player = (Player*)e;
+	
+		if(player != nullptr)
+		if (player->HP <= 0) {
+			return;
+		}
+
+
 		if (e->type == Ennemy)
 			ennemy = (EnnemyEntity*)e;
 		if (e->type == Bullet)
@@ -39,6 +46,14 @@ void World::update(double dt) {
 				auto oe = data[j];
 				if (oe->type == Wall) {
 					collideWallEnnemy(oe, ennemy);
+				}
+				else if (oe->type == PlayerObject) 
+				{
+					collidePlayerEnnemy(player = (Player*)oe, ennemy);
+				}
+				else if (oe->type == Ennemy) {
+
+					collideEnnemyEnnemy((EnnemyEntity*)oe, (EnnemyEntity*)e);
 				}
 			}
 		}
@@ -73,23 +88,7 @@ void World::update(double dt) {
 				}
 			}
 		}
-
-		/*if (e->type == Ennemy) {
-			for (int j = 0; j < data.size(); ++j) {
-				auto oe = data[j];
-				if (oe->type == PlayerObject) {
-					collidePlayerEnnemy(oe, e);
-				}
-			}*/
-
-		for (auto e : data) {
-			if (e->type == Bullet) {
-				if (e->getPosition().y > 1024) {
-					toBreakEntity.push_back(bullet);
-				};
-			}
-		}
-
+		
 	}
 
 
@@ -166,22 +165,25 @@ void World::collideEnnemyBullet(EnnemyEntity* ennemy, BulletEntity* bullet) {
 		for (size_t j = 0; j < ennemy->px.size(); j++)
 		{
 			if (!bullet->hit[i]) {
-				// Real distance check
-				auto dist = sqrt((bullet->px[i] - ennemy->px[j])*(bullet->px[i] - ennemy->px[j]) + (bullet->py[i] - ennemy->py[j])*(bullet->py[i] - ennemy->py[j]));
-				if (dist <= 10 /*radiusEnnemy*/ + 10 /*radiusBullet*/) { //il y a overlapp
+				if (ennemy->alive[j] == true) {
 
-					if (oe->type == Ennemy) {
-						audio->ballPong.play();
+					// Real distance check
+					auto dist = sqrt((bullet->px[i] - ennemy->px[j])*(bullet->px[i] - ennemy->px[j]) + (bullet->py[i] - ennemy->py[j])*(bullet->py[i] - ennemy->py[j]));
+					if (dist <= 10 /*radiusEnnemy*/ + 10 /*radiusBullet*/) { //il y a overlapp
+
+						if (oe->type == Ennemy) {
+							audio->ballPong.play();
 
 
-						for (int i = 0; i < 12; ++i)
-							Game::particlesAt(ennemy->getPosition());
-						Game::score += 100;
-						Game::shake = 30;
-						audio->ballPong.play();
-						bullet->hit[i] = true;
-						bullet->alive[i] = false;
-						ennemy->alive[j] = false;
+							for (int i = 0; i < 12; ++i)
+								Game::particlesAt(Vector2f(oe->px[j], oe->py[j]));
+							Game::score += 100;
+							Game::shake = 30;
+							audio->ballPong.play();
+							bullet->hit[i] = true;
+							bullet->alive[i] = false;
+							ennemy->alive[j] = false;
+						}
 					}
 				}
 
@@ -194,40 +196,32 @@ void World::collideEnnemyBullet(EnnemyEntity* ennemy, BulletEntity* bullet) {
 void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 	auto oe = ennemy;
 	auto e = player;
+	if (player == nullptr) return;
 	Vector2f playerPos = e->getPosition();
 	if (ennemy == nullptr) return;
 
 		for (size_t j = 0; j < ennemy->px.size(); j++)
 		{
-			if (!player->hit) {
+			if (player->timer >= 2.0f) {
 				// Real distance check
 				auto dist = sqrt((playerPos.x - ennemy->px[j])*(playerPos.x - ennemy->px[j]) + (playerPos.y - ennemy->py[j])*(playerPos.y - ennemy->py[j]));
 				if (dist <= 10 /*radiusEnnemy*/ + 40 /*radiusPlayer*/) { //il y a overlapp
-
+					
 					if (oe->type == Ennemy) {
 						audio->ballPong.play();
 
 						for (int i = 0; i < 12; ++i)
-							Game::particlesAt(ennemy->getPosition());
-						Game::score += 100;
+							Game::particlesAt(Vector2f(oe->px[j], oe->py[j]));
 						Game::shake = 30;
 						audio->ballPong.play();
-
+						player->HP -= 1;
 						ennemy->alive[j] = false;						
-						player->hit = true;
+						player->timer = 0;
 					}
 				}
 
 			}
-			if (player->hit) {
-
-				if (player->HP >= 0)
-					player->HP -= 1;
-				else if (player->HP <= 0) {
-					toBreakEntity.push_back(player);
-				}
-				player->hit = false;
-			}
+			
 		}
 	
 }
@@ -247,8 +241,8 @@ void World::collideEnnemyEnnemy(EnnemyEntity* ennemy1, EnnemyEntity* ennemy2) {
 				auto repelPower = (10 /*radiusEnnemy*/ + 10 /*radiusEnnemy*/ - dist) / (10 /*radiusEnnemy*/ + 10 /*radiusEnnemy*/);
 				e->dx[i] -= cos(ang) * repelPower * force;
 				e->dy[i] -= sin(ang) * repelPower * force;
-				oe->dx[j] -= cos(ang) * repelPower * force;
-				oe->dy[j] -= sin(ang) * repelPower * force;
+				oe->dx[j] += cos(ang) * repelPower * force;
+				oe->dy[j] += sin(ang) * repelPower * force;
 
 			}
 		}

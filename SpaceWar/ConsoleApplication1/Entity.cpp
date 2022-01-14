@@ -18,11 +18,13 @@ void Entity::draw(sf::RenderWindow& win) {
 }
 
 void Player::update(double dt) {
+	timer += dt;
 	Entity::update(dt);
 	
 }
 
 void Player::draw(sf::RenderWindow& win) {
+
 	Entity::draw(win);
 
 }

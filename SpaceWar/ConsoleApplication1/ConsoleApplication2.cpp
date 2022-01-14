@@ -32,7 +32,19 @@ float clamp(float val, float a, float b) {
 		val = b;
 	return val;
 }
+
+
 int main() {
+	sf::Clock                    clock;
+	sf::Time                    elapsedTime;
+	float                        dt = 0;
+	float						timer = 0;
+
+
+
+	sf::Font fArial;
+	if(!fArial.loadFromFile("res/arial.ttf"))
+		cout << "font not loaded" << endl;
 
 	float ScreenWidth = 1280;
 	float ScreenHeight = 720;
@@ -59,21 +71,34 @@ int main() {
 	int t = 10;
 	sf::CircleShape* bullets = new sf::CircleShape(t);
 	bullets->setOutlineThickness(2);
-	bullets->setFillColor(sf::Color::Yellow);
-	bullets->setOutlineColor(sf::Color::Red);
+	bullets->setFillColor(sf::Color::Blue);
+	bullets->setOutlineColor(sf::Color::Yellow);
 	bullets->setOrigin(sf::Vector2f(t, t));
 
 	int p = 10;
 	sf::CircleShape* ennemies = new sf::CircleShape(p);
 	ennemies->setOutlineThickness(2);
-	ennemies->setFillColor(sf::Color::Red);
-	ennemies->setOutlineColor(sf::Color::Yellow);
+	ennemies->setFillColor(sf::Color::Yellow);
+	ennemies->setOutlineColor(sf::Color::Red);
 	ennemies->setOrigin(sf::Vector2f(p, p));
 
 
 	sf::CircleShape ptr(8);
 	ptr.setFillColor(sf::Color::Cyan);
 	ptr.setOrigin(4, 4);
+
+
+	int score = 0;
+	sf::Text scoreTxt;
+	scoreTxt.setPosition(48, 16);
+	scoreTxt.setFont(fArial);
+	scoreTxt.setFillColor(sf::Color::White);
+	scoreTxt.setOutlineColor(sf::Color::Magenta);
+	scoreTxt.setOutlineThickness(2);
+	scoreTxt.setCharacterSize(45);
+
+
+	sf::Vector2i winPos = window.getPosition();
 
 
 	double tStart = getTimeStamp();
@@ -121,9 +146,13 @@ int main() {
 	Curve c;
 
 
+	///// W I N D O W   ///   O P E N /////
 	while (window.isOpen()) {
+
+		elapsedTime = clock.restart();
+		dt = elapsedTime.asSeconds();
+
 		sf::Event event;
-		sf::Clock timerRespawn;
 		double dt = tExitFrame - tEnterFrame;
 		tEnterFrame = getTimeStamp();
 
@@ -223,10 +252,11 @@ int main() {
 
 
 		///// E N N E M I E S /////
-		sf::Time coolDown = timerRespawn.getElapsedTime();
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+		if (timer >= 5.0f ) {
 
+			for (size_t i = 0; i < 5; i++)
+			{
 			sf::Vector2f randPos1(rand()%1200, rand()%700);
 			sf::Vector2f randPos2(rand() % 1200, rand() % 700);
 
@@ -239,14 +269,16 @@ int main() {
 			}
 
 			dxy *= 60.0f * 3;
+				
+				ennemy->create(randPos1.x, randPos1.y, dxy.x, dxy.y);
+			}
 
-			ennemy->create(randPos1.x, randPos1.y, dxy.x, dxy.y);
-
-			timerRespawn.restart();
+			timer = 0;
 		}
 
 
-
+		scoreTxt.setString("SCORE :" + to_string(Game::score));
+		timer += dt;
 
 		ImGui::SFML::Update(window, sf::milliseconds((int)(dt * 1000)));
 		window.clear();
@@ -259,10 +291,23 @@ int main() {
 
 		///// D R A W /////
 		world.draw(window);
-		window.draw(*canon);
+		if(player->HP >= 0)
+			window.draw(*canon);
 
 		c.draw(window);
 		window.draw(ptr);
+
+		Game::parts.draw(window);
+
+		///// U I /////
+		window.draw(scoreTxt);
+
+		///// S H A K E /////
+		if (Game::shake > 0)
+			window.setPosition(winPos + sf::Vector2i(0 + rand() % 5, 0 + rand() % 5));
+		else
+			window.setPosition(winPos);
+		Game::shake--;
 
 		ImGui::SFML::Render(window);
 		window.display();
