@@ -58,7 +58,7 @@ public:
 
 	bool hit  = false;
 	int HP = 5;
-	float						timer = 0;
+	float						timerHit = 0;
 
 	Player(EType type, sf::Shape* _spr) : Entity(type, _spr) {
 
@@ -104,7 +104,8 @@ public:
 class EnnemyEntity : public Entity {
 public:
 
-	float radius = 10;
+	float radius = 20;
+
 
 	std::vector<float>	px;
 	std::vector<float>	py;

@@ -169,7 +169,7 @@ void World::collideEnnemyBullet(EnnemyEntity* ennemy, BulletEntity* bullet) {
 
 					// Real distance check
 					auto dist = sqrt((bullet->px[i] - ennemy->px[j])*(bullet->px[i] - ennemy->px[j]) + (bullet->py[i] - ennemy->py[j])*(bullet->py[i] - ennemy->py[j]));
-					if (dist <= 10 /*radiusEnnemy*/ + 10 /*radiusBullet*/) { //il y a overlapp
+					if (dist <= 20 /*radiusEnnemy*/ + 10 /*radiusBullet*/) { //il y a overlapp
 
 						if (oe->type == Ennemy) {
 							audio->ballPong.play();
@@ -202,10 +202,10 @@ void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 
 		for (size_t j = 0; j < ennemy->px.size(); j++)
 		{
-			if (player->timer >= 2.0f) {
+			if (player->timerHit >= 2.0f) {
 				// Real distance check
 				auto dist = sqrt((playerPos.x - ennemy->px[j])*(playerPos.x - ennemy->px[j]) + (playerPos.y - ennemy->py[j])*(playerPos.y - ennemy->py[j]));
-				if (dist <= 10 /*radiusEnnemy*/ + 40 /*radiusPlayer*/) { //il y a overlapp
+				if (dist <= 20 /*radiusEnnemy*/ + 40 /*radiusPlayer*/) { //il y a overlapp
 					
 					if (oe->type == Ennemy) {
 						audio->ballPong.play();
@@ -216,7 +216,7 @@ void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 						audio->ballPong.play();
 						player->HP -= 1;
 						ennemy->alive[j] = false;						
-						player->timer = 0;
+						player->timerHit = 0;
 					}
 				}
 
@@ -235,10 +235,10 @@ void World::collideEnnemyEnnemy(EnnemyEntity* ennemy1, EnnemyEntity* ennemy2) {
 		for (size_t j = 0; j < ennemy2->px.size(); j++)
 		{
 			auto dist = sqrt((oe->px[i] - e->px[j])*(oe->px[i] - e->px[j]) + (oe->py[i] - e->py[j])*(oe->py[i] - e->py[j]));
-			if (dist <= 10 /*radiusEnnemy*/ + 10 /*radiusEnnemy*/) { //il y a overlapp
+			if (dist <= 20 /*radiusEnnemy*/ + 20 /*radiusEnnemy*/) { //il y a overlapp
 				auto ang = atan2((oe->py[i] - e->py[j]), (oe->px[i] - e->px[j]));
-				auto force = 700;
-				auto repelPower = (10 /*radiusEnnemy*/ + 10 /*radiusEnnemy*/ - dist) / (10 /*radiusEnnemy*/ + 10 /*radiusEnnemy*/);
+				auto force = 300;
+				auto repelPower = (20 /*radiusEnnemy*/ + 20 /*radiusEnnemy*/ - dist) / (20 /*radiusEnnemy*/ + 20 /*radiusEnnemy*/);
 				e->dx[i] -= cos(ang) * repelPower * force;
 				e->dy[i] -= sin(ang) * repelPower * force;
 				oe->dx[j] += cos(ang) * repelPower * force;
@@ -259,8 +259,11 @@ void World::draw(sf::RenderWindow& win)
 Audio::Audio() {
 	if (ballPongBuffer.loadFromFile("res/ball_pong.wav"))
 		ballPong.setBuffer(ballPongBuffer);
-	if (gothBuffer.loadFromFile("res/loligoth.ogg"))
-		goth.setBuffer(gothBuffer);
-	goth.play();
-	goth.setLoop(true);
+	if (mix.openFromFile("res/MixDubStep.wav")) {
+		mix.play();
+		mix.setVolume(8.0f);
+		mix.setLoop(true);
+
+	}
+		
 }

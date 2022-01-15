@@ -30,10 +30,10 @@ void Particle::create(float _px, float _py, float _dx, float _dy) {
 void Particle::update(double dt) {
 	for (int i = 0; i < px.size(); ++i) {
 		if (alive[i]) {
-			px[i] += dx[i] * dt;
-			py[i] += dy[i] * dt;
+			px[i] += dx[i] * dt * 5;
+			py[i] += dy[i] * dt * 5;
 
-			dy[i] += (rand()%180 ) * dt ;
+			//dy[i] += (rand()%180 ) * dt ;
 
 			if (
 				(px[i] > 3000) || (px[i] < -100) ||

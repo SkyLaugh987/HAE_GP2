@@ -41,7 +41,6 @@ int main() {
 	float						timer = 0;
 
 
-
 	sf::Font fArial;
 	if(!fArial.loadFromFile("res/arial.ttf"))
 		cout << "font not loaded" << endl;
@@ -55,6 +54,7 @@ int main() {
 	ImGui::SFML::Init(window);
 
 
+	///// V A R I A B L E S /////
 	sf::CircleShape* ship = new sf::CircleShape(40);
 	ship->setFillColor(sf::Color::Cyan);
 	ship->setOutlineThickness(2);
@@ -75,7 +75,7 @@ int main() {
 	bullets->setOutlineColor(sf::Color::Yellow);
 	bullets->setOrigin(sf::Vector2f(t, t));
 
-	int p = 10;
+	int p = 20;
 	sf::CircleShape* ennemies = new sf::CircleShape(p);
 	ennemies->setOutlineThickness(2);
 	ennemies->setFillColor(sf::Color::Yellow);
@@ -132,6 +132,10 @@ int main() {
 	topWall->setPosition(sf::Vector2f(0, 0));
 	botWall->setPosition(sf::Vector2f(0, 720));
 
+
+	Audio audio;
+
+
 	World world;
 	world.data.push_back(leftWall);
 	world.data.push_back(rightWall);
@@ -164,6 +168,7 @@ int main() {
 				window.close();
 		}
 		
+
 		auto pos = player->getPosition();
 		float deltaX = dt * 160 * 6;
 		float deltaY = dt * 160 * 6;

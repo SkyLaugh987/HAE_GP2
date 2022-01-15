@@ -3,6 +3,7 @@
 #include "Entity.hpp"
 #include "SFML/Audio/Sound.hpp"
 #include "SFML/Audio/SoundBuffer.hpp"
+#include "SFML/Audio/Music.hpp"
 
 class Audio {
 public:
@@ -10,8 +11,7 @@ public:
 	sf::Sound		ballPong;
 	sf::SoundBuffer ballPongBuffer;
 
-	sf::Sound		goth;
-	sf::SoundBuffer gothBuffer;
+	sf::Music		mix;
 };
 
 class World {

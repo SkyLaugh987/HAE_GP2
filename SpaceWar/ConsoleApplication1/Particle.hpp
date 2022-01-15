@@ -15,6 +15,8 @@ public:
 
 	std::vector<bool>	alive;
 
+	float				timer;
+
 	Particle();
 
 	void create(float px, float py, float dx, float dy);

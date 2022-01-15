@@ -18,7 +18,7 @@ void Entity::draw(sf::RenderWindow& win) {
 }
 
 void Player::update(double dt) {
-	timer += dt;
+	timerHit += dt;
 	Entity::update(dt);
 	
 }
