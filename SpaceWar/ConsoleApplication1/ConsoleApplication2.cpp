@@ -114,6 +114,15 @@ int main() {
 	hpTxt.setCharacterSize(45);
 
 
+	sf::Text endTxt;
+	endTxt.setPosition(500, 300);
+	endTxt.setFont(fArial);
+	endTxt.setFillColor(sf::Color::White);
+	endTxt.setOutlineColor(sf::Color::Magenta);
+	endTxt.setOutlineThickness(2);
+	endTxt.setCharacterSize(45);
+
+
 	sf::Vector2i winPos = window.getPosition();
 
 
@@ -125,7 +134,7 @@ int main() {
 	Player* player = new Player(EType::PlayerObject, ship);
 	BulletEntity* bullet = new BulletEntity(EType::Bullet, bullets);
 	EnnemyEntity* ennemy = new EnnemyEntity(EType::Ennemy, ennemies);
-	HealthPackEntity* pack = new HealthPackEntity(EType::HealthPack, packs);
+	//HealthPackEntity* pack = new HealthPackEntity(EType::HealthPack, packs);
 
 
 	auto vWallShapeLeft = new sf::RectangleShape(sf::Vector2f(16, 2048));
@@ -161,7 +170,7 @@ int main() {
 	world.data.push_back(player);
 	world.data.push_back(bullet);
 	world.data.push_back(ennemy);
-	world.data.push_back(pack);
+	//world.data.push_back(pack);
 
 	
 	bool mouseLeftWasPressed = false;
@@ -307,8 +316,7 @@ int main() {
 
 
 		///// H E A L T H   P A C K /////
-
-		if (healthPackTimer >= 5.0f) {
+		/*if (healthPackTimer >= 5.0f) {
 			
 				sf::Vector2f randPos1(rand() % 1200, rand() % 700);
 				sf::Vector2f randPos2(rand() % 1200, rand() % 700);
@@ -318,11 +326,13 @@ int main() {
 				
 			
 				healthPackTimer = 0;
-		}
+		}*/
 
 
 		scoreTxt.setString("SCORE :" + to_string(Game::score));
 		hpTxt.setString("HP :" + to_string(player->playerHP));
+		endTxt.setString("GAME OVER\n" "SCORE :" + to_string(Game::score));
+
 
 		timer += dt;
 		healthPackTimer += dt;
@@ -350,6 +360,8 @@ int main() {
 		///// U I /////
 		window.draw(scoreTxt);
 		window.draw(hpTxt);
+		if (player->playerHP <= 0)
+			window.draw(endTxt);
 
 		///// S H A K E /////
 		if (Game::shake > 0)

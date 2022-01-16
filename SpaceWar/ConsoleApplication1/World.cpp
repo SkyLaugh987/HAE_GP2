@@ -12,7 +12,7 @@ void World::update(double dt) {
 	Player* player =					nullptr;
 	BulletEntity* bullet =				nullptr;
 	EnnemyEntity* ennemy =				nullptr;
-	HealthPackEntity* pack =			nullptr;
+	//HealthPackEntity* pack =			nullptr;
 
 
 	for (auto e : data) {
@@ -94,7 +94,7 @@ void World::update(double dt) {
 		}
 
 		///// H E A L T H   P A C K /////
-		if (e->type == HealthPack) {
+		/*if (e->type == HealthPack) {
 			pack = (HealthPackEntity*)e;
 			for (int i = 0; i < bullet->px.size(); i++)
 			{
@@ -106,7 +106,7 @@ void World::update(double dt) {
 					collideHealthPackPlayer((Player*)oe, pack);
 				}
 			}
-		}
+		}*/
 	}
 
 
@@ -274,7 +274,7 @@ void World::collideEnnemyEnnemy(EnnemyEntity* ennemy1, EnnemyEntity* ennemy2) {
 
 
 ///// P A C K  vs  P L A Y E R /////
-void World::collideHealthPackPlayer(Player* player, HealthPackEntity* pack) {
+/*void World::collideHealthPackPlayer(Player* player, HealthPackEntity* pack) {
 	auto oe = pack;
 	auto e = player;
 	if (player == nullptr) return;
@@ -285,9 +285,9 @@ void World::collideHealthPackPlayer(Player* player, HealthPackEntity* pack) {
 	{
 		// Real distance check
 		auto dist = sqrt((playerPos.x - pack->px[j])*(playerPos.x - pack->px[j]) + (playerPos.y - pack->py[j])*(playerPos.y - pack->py[j]));
-		if (dist <= 30 /*radiusPack*/ + 30 /*radiusPlayer*/) { //il y a overlapp
+		if (dist <= 30 /*radiusPack*/ //+ 30 /*radiusPlayer*/) { //il y a overlapp
 
-			if (oe->type == HealthPack) {
+/*			if (oe->type == HealthPack) {
 
 				audio->healthPackSound.play();
 				player->playerHP += 5;
@@ -296,7 +296,7 @@ void World::collideHealthPackPlayer(Player* player, HealthPackEntity* pack) {
 		}
 	}
 
-}
+}*/
 
 
 void World::draw(sf::RenderWindow& win)

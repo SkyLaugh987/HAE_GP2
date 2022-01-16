@@ -140,7 +140,7 @@ void EnnemyEntity::draw(sf::RenderWindow& win) {
 
 
 ///// H E A L T H   P A C K /////
-void HealthPackEntity::create(float _px, float _py) {
+/*void HealthPackEntity::create(float _px, float _py) {
 	for (int i = 0; i < px.size(); ++i) {
 		if (!alive[i]) {
 			px[i] = _px;
@@ -173,4 +173,4 @@ void HealthPackEntity::draw(sf::RenderWindow& win) {
 		}
 		idx++;
 	}
-}
+}*/

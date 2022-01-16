@@ -37,7 +37,7 @@ public:
 	void collideEnnemyBullet(EnnemyEntity* wall, BulletEntity* ball);
 	void collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy);
 	void collideEnnemyEnnemy(EnnemyEntity* A, EnnemyEntity* B);
-	void collideHealthPackPlayer( Player* player, HealthPackEntity* pack);
+	//void collideHealthPackPlayer( Player* player, HealthPackEntity* pack);
 
 	std::vector<Entity*> toBreakEntity;
 };

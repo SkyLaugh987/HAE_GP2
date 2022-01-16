@@ -134,7 +134,7 @@ public:
 
 };
 
-class HealthPackEntity : public Entity {
+/*class HealthPackEntity : public Entity {
 public:
 
 	std::vector<float>	px;
@@ -156,4 +156,4 @@ public:
 	void update(double dt);
 	void draw(sf::RenderWindow& win);
 
-};
+};*/
