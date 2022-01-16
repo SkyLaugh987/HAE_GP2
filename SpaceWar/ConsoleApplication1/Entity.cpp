@@ -17,9 +17,15 @@ void Entity::draw(sf::RenderWindow& win) {
 		win.draw(*spr);
 }
 
+
+///// P L A Y E R /////
 void Player::update(double dt) {
 	timerHit += dt;
 	Entity::update(dt);
+	if (timerHit < 3.0f)
+		wasHit = true;
+	else wasHit = false;
+
 	
 }
 
@@ -30,6 +36,7 @@ void Player::draw(sf::RenderWindow& win) {
 }
 
 
+///// B U L L E T /////
 void BulletEntity::create(float _px, float _py, float _dx, float _dy) {
 	for (int i = 0; i < px.size(); ++i) {
 		if (!alive[i]) {
@@ -39,6 +46,7 @@ void BulletEntity::create(float _px, float _py, float _dx, float _dy) {
 			dy[i] = _dy;
 			alive[i] = true;
 			hit[i] = false;
+			rebound[i] = 0;
 			lastGoodPosition_B[i] = sf::Vector2f(_px, _py);
 			return;
 		}
@@ -50,6 +58,7 @@ void BulletEntity::create(float _px, float _py, float _dx, float _dy) {
 	lastGoodPosition_B.push_back(sf::Vector2f(_px, _py));
 	alive.push_back(true);
 	hit.push_back(false);
+	rebound.push_back(0);
 }
 
 void BulletEntity::update(double dt) {
@@ -57,10 +66,7 @@ void BulletEntity::update(double dt) {
 		if (alive[i]) {
 			px[i] += dx[i] * dt;
 			py[i] += dy[i] * dt;
-			if (
-				(px[i] > 3000) || (px[i] < -100) ||
-				(py[i] > 3000) || (py[i] < -100)
-				) {
+			if (rebound[i] >= 2) {
 				alive[i] = false;
 			}
 		}
@@ -78,7 +84,7 @@ void BulletEntity::draw(sf::RenderWindow& win) {
 	}
 }
 
-
+///// E N E M Y /////
 void EnnemyEntity::create(float _px, float _py, float _dx, float _dy) {
 	for (int i = 0; i < px.size(); ++i) {
 		if (!alive[i]) {

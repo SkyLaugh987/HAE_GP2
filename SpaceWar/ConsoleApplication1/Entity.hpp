@@ -4,6 +4,7 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/CircleShape.hpp"
 
+
 enum EType {
 	PlayerObject,
 	Ennemy,
@@ -56,8 +57,8 @@ public:
 class Player : public Entity {
 public:
 
-	bool hit  = false;
-	int HP = 5;
+	bool wasHit  = false;
+	int HP = 10;
 	float						timerHit = 0;
 
 	Player(EType type, sf::Shape* _spr) : Entity(type, _spr) {
@@ -86,6 +87,7 @@ public:
 
 	std::vector<bool>	alive;
 	std::vector<bool>	hit;
+	std::vector<int>	rebound;
 
 	BulletEntity(EType _type, sf::Shape* b) : Entity(type, spr) {
 		type = _type;

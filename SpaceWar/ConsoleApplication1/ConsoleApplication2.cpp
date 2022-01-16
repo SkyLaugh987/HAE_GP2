@@ -55,12 +55,12 @@ int main() {
 
 
 	///// V A R I A B L E S /////
-	sf::CircleShape* ship = new sf::CircleShape(40);
+	sf::CircleShape* ship = new sf::CircleShape(30);
 	ship->setFillColor(sf::Color::Cyan);
 	ship->setOutlineThickness(2);
 	ship->setOutlineColor(sf::Color::Magenta);
 	ship->setPosition(800, 600);
-	ship->setOrigin(40, 40);
+	ship->setOrigin(30, 30);
 
 	sf::RectangleShape* canon = new sf::RectangleShape(sf::Vector2f(20, 50));
 	canon->setFillColor(sf::Color::Magenta);
@@ -175,6 +175,7 @@ int main() {
 		bool keyHit = false;
 
 
+		///// P L A Y E R /////
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 			pos.x -= deltaX;
 			keyHit = true;
@@ -207,6 +208,13 @@ int main() {
 			player->setPosition(pos);
 		}
 
+		if (player->wasHit == true) {
+			ship->setFillColor(sf::Color::Magenta);
+		}
+		if (player->wasHit == false) {
+			ship->setFillColor(sf::Color::Cyan);
+
+		}
 
 
 		///// S H O O T /////

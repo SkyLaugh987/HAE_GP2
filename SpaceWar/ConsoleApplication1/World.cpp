@@ -111,6 +111,7 @@ void World::collideWallBullet(Entity* wall, BulletEntity* bullet) {
 	{
 		Vector2f bulletPos = Vector2f(e->px[i], e->py[i]);
 		if (oe->getBoundingBox().contains(bulletPos)) {
+			e->rebound[i] += 1;
 			audio->ballPong.play();
 			//determiner si le rebond est sur l'axe vert ou horiz
 			e->px[i] = e->lastGoodPosition_B[i].x;
@@ -202,10 +203,10 @@ void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 
 		for (size_t j = 0; j < ennemy->px.size(); j++)
 		{
-			if (player->timerHit >= 2.0f) {
+			if (player->timerHit >= 3.0f) {
 				// Real distance check
 				auto dist = sqrt((playerPos.x - ennemy->px[j])*(playerPos.x - ennemy->px[j]) + (playerPos.y - ennemy->py[j])*(playerPos.y - ennemy->py[j]));
-				if (dist <= 20 /*radiusEnnemy*/ + 40 /*radiusPlayer*/) { //il y a overlapp
+				if (dist <= 20 /*radiusEnnemy*/ + 30 /*radiusPlayer*/) { //il y a overlapp
 					
 					if (oe->type == Ennemy) {
 						audio->ballPong.play();
@@ -219,7 +220,6 @@ void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 						player->timerHit = 0;
 					}
 				}
-
 			}
 			
 		}
