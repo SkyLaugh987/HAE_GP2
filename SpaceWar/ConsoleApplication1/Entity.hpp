@@ -58,7 +58,7 @@ class Player : public Entity {
 public:
 
 	bool wasHit  = false;
-	int HP = 10;
+	int playerHP = 10;
 	float						timerHit = 0;
 
 	Player(EType type, sf::Shape* _spr) : Entity(type, _spr) {

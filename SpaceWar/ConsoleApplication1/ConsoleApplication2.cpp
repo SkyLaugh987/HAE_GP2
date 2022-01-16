@@ -97,6 +97,15 @@ int main() {
 	scoreTxt.setOutlineThickness(2);
 	scoreTxt.setCharacterSize(45);
 
+	
+	sf::Text hpTxt;
+	hpTxt.setPosition(1032, 16);
+	hpTxt.setFont(fArial);
+	hpTxt.setFillColor(sf::Color::White);
+	hpTxt.setOutlineColor(sf::Color::Magenta);
+	hpTxt.setOutlineThickness(2);
+	hpTxt.setCharacterSize(45);
+
 
 	sf::Vector2i winPos = window.getPosition();
 
@@ -291,6 +300,8 @@ int main() {
 
 
 		scoreTxt.setString("SCORE :" + to_string(Game::score));
+		hpTxt.setString("HP :" + to_string(player->playerHP));
+
 		timer += dt;
 
 		ImGui::SFML::Update(window, sf::milliseconds((int)(dt * 1000)));
@@ -304,7 +315,7 @@ int main() {
 
 		///// D R A W /////
 		world.draw(window);
-		if(player->HP >= 0)
+		if(player->playerHP >= 0)
 			window.draw(*canon);
 
 		c.draw(window);
@@ -314,6 +325,7 @@ int main() {
 
 		///// U I /////
 		window.draw(scoreTxt);
+		window.draw(hpTxt);
 
 		///// S H A K E /////
 		if (Game::shake > 0)

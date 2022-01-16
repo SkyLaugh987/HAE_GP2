@@ -25,7 +25,7 @@ void World::update(double dt) {
 			player = (Player*)e;
 	
 		if(player != nullptr)
-		if (player->HP <= 0) {
+		if (player->playerHP <= 0) {
 			return;
 		}
 
@@ -219,8 +219,8 @@ void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 						for (int i = 0; i < 12; ++i)
 							Game::particlesAt(Vector2f(oe->px[j], oe->py[j]));
 						Game::shake = 30;
-						//audio->ballPong.play();
-						player->HP -= 1;
+						//Game::uiHP -= 1;
+						player->playerHP -= 1;
 						ennemy->alive[j] = false;						
 						player->timerHit = 0;
 					}
