@@ -137,3 +137,40 @@ void EnnemyEntity::draw(sf::RenderWindow& win) {
 		idx++;
 	}
 }
+
+
+///// H E A L T H   P A C K /////
+void HealthPackEntity::create(float _px, float _py) {
+	for (int i = 0; i < px.size(); ++i) {
+		if (!alive[i]) {
+			px[i] = _px;
+			py[i] = _py;
+
+			alive[i] = true;
+			lastGoodPosition_H[i] = sf::Vector2f(_px, _py);
+			return;
+		}
+	}
+	px.push_back(_px);
+	py.push_back(_py);
+
+	alive.push_back(true);
+	lastGoodPosition_H.push_back(sf::Vector2f(_px, _py));
+
+}
+
+void HealthPackEntity::update(double dt) {
+	Entity::update(dt);
+}
+
+void HealthPackEntity::draw(sf::RenderWindow& win) {
+	int idx = 0;
+	const int sz = px.size();
+	while (idx < sz) {
+		if (alive[idx]) {
+			spr->setPosition(px[idx], py[idx]);
+			win.draw(*spr);
+		}
+		idx++;
+	}
+}

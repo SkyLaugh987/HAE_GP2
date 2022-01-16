@@ -10,6 +10,7 @@ enum EType {
 	Ennemy,
 	Wall,
 	Bullet,
+	HealthPack
 };
 
 class Entity {
@@ -102,7 +103,7 @@ public:
 };
 
 
-////// E N  E M Y /////
+////// E N E M Y /////
 class EnnemyEntity : public Entity {
 public:
 
@@ -129,6 +130,30 @@ public:
 	void create(float px, float py, float dx, float dy);
 	void update(double dt);
 
+	void draw(sf::RenderWindow& win);
+
+};
+
+class HealthPackEntity : public Entity {
+public:
+
+	std::vector<float>	px;
+	std::vector<float>	py;
+
+	std::vector<float>	dx;
+	std::vector<float>	dy;
+
+	std::vector<bool>	alive;
+	std::vector<sf::Vector2f>	lastGoodPosition_H;
+
+
+	HealthPackEntity(EType _type, sf::Shape* _e) : Entity(type, spr) {
+		type = _type;
+		spr = _e;
+	}
+
+	void create(float px, float py);
+	void update(double dt);
 	void draw(sf::RenderWindow& win);
 
 };

@@ -15,6 +15,9 @@ public:
 	sf::Sound		laserShot;
 	sf::SoundBuffer laserShotBuffer;
 
+	sf::Sound		healthPackSound;
+	sf::SoundBuffer healthPackSoundBuffer;
+
 	sf::Sound		lostSound;
 	sf::SoundBuffer lostSoundBuffer;
 
@@ -34,6 +37,7 @@ public:
 	void collideEnnemyBullet(EnnemyEntity* wall, BulletEntity* ball);
 	void collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy);
 	void collideEnnemyEnnemy(EnnemyEntity* A, EnnemyEntity* B);
+	void collideHealthPackPlayer( Player* player, HealthPackEntity* pack);
 
 	std::vector<Entity*> toBreakEntity;
 };

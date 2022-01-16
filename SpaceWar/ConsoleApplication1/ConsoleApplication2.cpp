@@ -35,10 +35,11 @@ float clamp(float val, float a, float b) {
 
 
 int main() {
-	sf::Clock                    clock;
+	sf::Clock                   clock;
 	sf::Time                    elapsedTime;
-	float                        dt = 0;
+	float                       dt = 0;
 	float						timer = 0;
+	float						healthPackTimer = 0;
 
 
 	sf::Font fArial;
@@ -68,6 +69,12 @@ int main() {
 	canon->setOutlineColor(sf::Color::Cyan);
 	canon->setOrigin(10, 0);
 
+	sf::CircleShape* packs = new sf::CircleShape(30);
+	ship->setFillColor(sf::Color::Green);
+	ship->setOutlineThickness(2);
+	ship->setOutlineColor(sf::Color::Cyan);
+	ship->setOrigin(30, 30);
+
 	int t = 10;
 	sf::CircleShape* bullets = new sf::CircleShape(t);
 	bullets->setOutlineThickness(2);
@@ -87,7 +94,7 @@ int main() {
 	ptr.setFillColor(sf::Color::Cyan);
 	ptr.setOrigin(4, 4);
 
-
+	///// T E X T S /////
 	int score = 0;
 	sf::Text scoreTxt;
 	scoreTxt.setPosition(48, 16);
@@ -118,6 +125,7 @@ int main() {
 	Player* player = new Player(EType::PlayerObject, ship);
 	BulletEntity* bullet = new BulletEntity(EType::Bullet, bullets);
 	EnnemyEntity* ennemy = new EnnemyEntity(EType::Ennemy, ennemies);
+	HealthPackEntity* pack = new HealthPackEntity(EType::HealthPack, packs);
 
 
 	auto vWallShapeLeft = new sf::RectangleShape(sf::Vector2f(16, 2048));
@@ -153,6 +161,7 @@ int main() {
 	world.data.push_back(player);
 	world.data.push_back(bullet);
 	world.data.push_back(ennemy);
+	world.data.push_back(pack);
 
 	
 	bool mouseLeftWasPressed = false;
@@ -222,7 +231,6 @@ int main() {
 		}
 		if (player->wasHit == false) {
 			ship->setFillColor(sf::Color::Cyan);
-
 		}
 
 
@@ -294,8 +302,22 @@ int main() {
 				
 				ennemy->create(randPos1.x, randPos1.y, dxy.x, dxy.y);
 			}
-
 			timer = 0;
+		}
+
+
+		///// H E A L T H   P A C K /////
+
+		if (healthPackTimer >= 5.0f) {
+			
+				sf::Vector2f randPos1(rand() % 1200, rand() % 700);
+				sf::Vector2f randPos2(rand() % 1200, rand() % 700);
+
+				pack->create(randPos1.x, randPos1.y);
+
+				
+			
+				healthPackTimer = 0;
 		}
 
 
@@ -303,6 +325,8 @@ int main() {
 		hpTxt.setString("HP :" + to_string(player->playerHP));
 
 		timer += dt;
+		healthPackTimer += dt;
+
 
 		ImGui::SFML::Update(window, sf::milliseconds((int)(dt * 1000)));
 		window.clear();

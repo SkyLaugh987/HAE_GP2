@@ -9,9 +9,10 @@ void World::update(double dt) {
 	if (audio == nullptr)
 		audio = new Audio();
 
-	Player* player = nullptr;
-	BulletEntity* bullet = nullptr;
-	EnnemyEntity* ennemy = nullptr;
+	Player* player =					nullptr;
+	BulletEntity* bullet =				nullptr;
+	EnnemyEntity* ennemy =				nullptr;
+	HealthPackEntity* pack =			nullptr;
 
 
 	for (auto e : data) {
@@ -26,6 +27,8 @@ void World::update(double dt) {
 	
 		if(player != nullptr)
 		if (player->playerHP <= 0) {
+			audio->lostSound.play();
+			audio->mix.stop();
 			return;
 		}
 
@@ -89,7 +92,21 @@ void World::update(double dt) {
 				}
 			}
 		}
-		
+
+		///// H E A L T H   P A C K /////
+		if (e->type == HealthPack) {
+			pack = (HealthPackEntity*)e;
+			for (int i = 0; i < bullet->px.size(); i++)
+			{
+				pack->lastGoodPosition_H[i] = Vector2f(pack->px[i], bullet->py[i]);
+			}
+			for (int j = 0; j < data.size(); ++j) {
+				auto oe = data[j];
+				if (oe->type == PlayerObject) {
+					collideHealthPackPlayer((Player*)oe, pack);
+				}
+			}
+		}
 	}
 
 
@@ -219,7 +236,7 @@ void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 						for (int i = 0; i < 12; ++i)
 							Game::particlesAt(Vector2f(oe->px[j], oe->py[j]));
 						Game::shake = 30;
-						//Game::uiHP -= 1;
+
 						player->playerHP -= 1;
 						ennemy->alive[j] = false;						
 						player->timerHit = 0;
@@ -256,6 +273,32 @@ void World::collideEnnemyEnnemy(EnnemyEntity* ennemy1, EnnemyEntity* ennemy2) {
 }
 
 
+///// P A C K  vs  P L A Y E R /////
+void World::collideHealthPackPlayer(Player* player, HealthPackEntity* pack) {
+	auto oe = pack;
+	auto e = player;
+	if (player == nullptr) return;
+	Vector2f playerPos = e->getPosition();
+	if (pack == nullptr) return;
+
+	for (size_t j = 0; j < pack->px.size(); j++)
+	{
+		// Real distance check
+		auto dist = sqrt((playerPos.x - pack->px[j])*(playerPos.x - pack->px[j]) + (playerPos.y - pack->py[j])*(playerPos.y - pack->py[j]));
+		if (dist <= 30 /*radiusPack*/ + 30 /*radiusPlayer*/) { //il y a overlapp
+
+			if (oe->type == HealthPack) {
+
+				audio->healthPackSound.play();
+				player->playerHP += 5;
+				pack->alive[j] = false;
+			}
+		}
+	}
+
+}
+
+
 void World::draw(sf::RenderWindow& win)
 {
 	for (auto e : data)
@@ -265,6 +308,9 @@ void World::draw(sf::RenderWindow& win)
 Audio::Audio() {
 	if (laserShotBuffer.loadFromFile("res/LaserShot.wav"))
 		laserShot.setBuffer(laserShotBuffer);
+
+	if (healthPackSoundBuffer.loadFromFile("res/HPack.wav"))
+		healthPackSound.setBuffer(healthPackSoundBuffer);
 
 	if (hitSoundBuffer.loadFromFile("res/Hit.wav"))
 		hitSound.setBuffer(hitSoundBuffer);
