@@ -240,9 +240,9 @@ int main() {
 				dxy = dir / dirLen;
 			}
 
-			dxy *= 60.0f * 10;
+			dxy *= 60.0f * 30;
 			bullet->create(pos.x, pos.y, dxy.x, dxy.y);
-
+			audio.laserShot.play();
 			
 		}
 

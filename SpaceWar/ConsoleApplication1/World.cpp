@@ -35,6 +35,7 @@ void World::update(double dt) {
 		if (e->type == Bullet)
 			bullet = (BulletEntity*)e;
 
+
 		///// E N N E M Y /////
 		if (e->type == Ennemy) {
 			ennemy = (EnnemyEntity*)e;
@@ -104,6 +105,7 @@ void World::update(double dt) {
 }
 
 
+///// B U L L E T  vs  W A L L /////
 void World::collideWallBullet(Entity* wall, BulletEntity* bullet) {
 	auto oe = wall;
 	auto e = bullet;
@@ -112,7 +114,7 @@ void World::collideWallBullet(Entity* wall, BulletEntity* bullet) {
 		Vector2f bulletPos = Vector2f(e->px[i], e->py[i]);
 		if (oe->getBoundingBox().contains(bulletPos)) {
 			e->rebound[i] += 1;
-			audio->ballPong.play();
+
 			//determiner si le rebond est sur l'axe vert ou horiz
 			e->px[i] = e->lastGoodPosition_B[i].x;
 			e->py[i] = e->lastGoodPosition_B[i].y;
@@ -130,6 +132,8 @@ void World::collideWallBullet(Entity* wall, BulletEntity* bullet) {
 	}
 }
 
+
+///// E N E M Y  vs  W A L L /////
 void World::collideWallEnnemy(Entity* wall, EnnemyEntity* ennemy) {
 	auto oe = wall;
 	auto e = ennemy;
@@ -137,7 +141,7 @@ void World::collideWallEnnemy(Entity* wall, EnnemyEntity* ennemy) {
 	{
 		Vector2f ennemyPos = Vector2f(e->px[i], e->py[i]);
 		if (oe->getBoundingBox().contains(ennemyPos)) {
-			audio->ballPong.play();
+
 			//determiner si le rebond est sur l'axe vert ou horiz
 			e->px[i] = e->lastGoodPosition_E[i].x;
 			e->py[i] = e->lastGoodPosition_E[i].y;
@@ -156,6 +160,7 @@ void World::collideWallEnnemy(Entity* wall, EnnemyEntity* ennemy) {
 }
 
 
+///// E N E M Y  vs  B U L L E T /////
 void World::collideEnnemyBullet(EnnemyEntity* ennemy, BulletEntity* bullet) {
 	auto oe = ennemy;
 	auto e = bullet;
@@ -173,14 +178,13 @@ void World::collideEnnemyBullet(EnnemyEntity* ennemy, BulletEntity* bullet) {
 					if (dist <= 20 /*radiusEnnemy*/ + 10 /*radiusBullet*/) { //il y a overlapp
 
 						if (oe->type == Ennemy) {
-							audio->ballPong.play();
 
 
 							for (int i = 0; i < 12; ++i)
 								Game::particlesAt(Vector2f(oe->px[j], oe->py[j]));
 							Game::score += 100;
 							Game::shake = 30;
-							audio->ballPong.play();
+
 							bullet->hit[i] = true;
 							bullet->alive[i] = false;
 							ennemy->alive[j] = false;
@@ -194,6 +198,7 @@ void World::collideEnnemyBullet(EnnemyEntity* ennemy, BulletEntity* bullet) {
 }
 
 
+///// E N E M Y  vs  P L A Y E R /////
 void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 	auto oe = ennemy;
 	auto e = player;
@@ -209,12 +214,12 @@ void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 				if (dist <= 20 /*radiusEnnemy*/ + 30 /*radiusPlayer*/) { //il y a overlapp
 					
 					if (oe->type == Ennemy) {
-						audio->ballPong.play();
+						audio->hitSound.play();
 
 						for (int i = 0; i < 12; ++i)
 							Game::particlesAt(Vector2f(oe->px[j], oe->py[j]));
 						Game::shake = 30;
-						audio->ballPong.play();
+						//audio->ballPong.play();
 						player->HP -= 1;
 						ennemy->alive[j] = false;						
 						player->timerHit = 0;
@@ -227,6 +232,7 @@ void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 }
 
 
+///// E N E M Y  vs  E N E M Y /////
 void World::collideEnnemyEnnemy(EnnemyEntity* ennemy1, EnnemyEntity* ennemy2) {
 	auto oe = ennemy1;
 	auto e = ennemy2;
@@ -257,9 +263,16 @@ void World::draw(sf::RenderWindow& win)
 }
 
 Audio::Audio() {
-	if (ballPongBuffer.loadFromFile("res/ball_pong.wav"))
-		ballPong.setBuffer(ballPongBuffer);
-	if (mix.openFromFile("res/MixDubStep.wav")) {
+	if (laserShotBuffer.loadFromFile("res/LaserShot.wav"))
+		laserShot.setBuffer(laserShotBuffer);
+
+	if (hitSoundBuffer.loadFromFile("res/Hit.wav"))
+		hitSound.setBuffer(hitSoundBuffer);
+
+	if (lostSoundBuffer.loadFromFile("res/Lost.wav"))
+		lostSound.setBuffer(lostSoundBuffer);
+
+	if (mix.openFromFile("res/Light_It_Up.wav")) {
 		mix.play();
 		mix.setVolume(8.0f);
 		mix.setLoop(true);

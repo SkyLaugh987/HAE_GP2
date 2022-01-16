@@ -66,7 +66,11 @@ void BulletEntity::update(double dt) {
 		if (alive[i]) {
 			px[i] += dx[i] * dt;
 			py[i] += dy[i] * dt;
-			if (rebound[i] >= 2) {
+			if ((rebound[i] >= 2) || 
+				(px[i] > 3000) || 
+				(px[i] < -100) ||
+				(py[i] > 3000) || 
+				(py[i] < -100)) {
 				alive[i] = false;
 			}
 		}

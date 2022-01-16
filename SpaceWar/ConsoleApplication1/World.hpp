@@ -8,8 +8,15 @@
 class Audio {
 public:
 	Audio();
-	sf::Sound		ballPong;
-	sf::SoundBuffer ballPongBuffer;
+
+	sf::Sound		hitSound;
+	sf::SoundBuffer hitSoundBuffer;
+
+	sf::Sound		laserShot;
+	sf::SoundBuffer laserShotBuffer;
+
+	sf::Sound		lostSound;
+	sf::SoundBuffer lostSoundBuffer;
 
 	sf::Music		mix;
 };
