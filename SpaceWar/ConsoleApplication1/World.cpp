@@ -5,9 +5,12 @@
 #include "Game.hpp"
 
 using namespace sf;
+
+
 void World::update(double dt) {
 	if (audio == nullptr)
 		audio = new Audio();
+
 
 	Player* player =					nullptr;
 	BulletEntity* bullet =				nullptr;
@@ -27,11 +30,9 @@ void World::update(double dt) {
 	
 		if(player != nullptr)
 		if (player->playerHP <= 0) {
-			audio->lostSound.play();
-			audio->mix.stop();
+			
 			return;
 		}
-
 
 		if (e->type == Ennemy)
 			ennemy = (EnnemyEntity*)e;
@@ -195,7 +196,7 @@ void World::collideEnnemyBullet(EnnemyEntity* ennemy, BulletEntity* bullet) {
 					if (dist <= 20 /*radiusEnnemy*/ + 10 /*radiusBullet*/) { //il y a overlapp
 
 						if (oe->type == Ennemy) {
-
+							audio->killSound.play();
 
 							for (int i = 0; i < 12; ++i)
 								Game::particlesAt(Vector2f(oe->px[j], oe->py[j]));
@@ -229,10 +230,11 @@ void World::collidePlayerEnnemy(Player* player, EnnemyEntity* ennemy) {
 				// Real distance check
 				auto dist = sqrt((playerPos.x - ennemy->px[j])*(playerPos.x - ennemy->px[j]) + (playerPos.y - ennemy->py[j])*(playerPos.y - ennemy->py[j]));
 				if (dist <= 20 /*radiusEnnemy*/ + 30 /*radiusPlayer*/) { //il y a overlapp
-					
-					if (oe->type == Ennemy) {
-						audio->hitSound.play();
+					audio->hitSound.play();
 
+					if (oe->type == Ennemy) {
+						
+						audio->hitSound.play();
 						for (int i = 0; i < 12; ++i)
 							Game::particlesAt(Vector2f(oe->px[j], oe->py[j]));
 						Game::shake = 30;
@@ -309,20 +311,26 @@ Audio::Audio() {
 	if (laserShotBuffer.loadFromFile("res/LaserShot.wav"))
 		laserShot.setBuffer(laserShotBuffer);
 
-	if (healthPackSoundBuffer.loadFromFile("res/HPack.wav"))
-		healthPackSound.setBuffer(healthPackSoundBuffer);
+	//if (healthPackSoundBuffer.loadFromFile("res/HPack.wav"))
+		//healthPackSound.setBuffer(healthPackSoundBuffer);
 
-	if (hitSoundBuffer.loadFromFile("res/Hit.wav"))
+	if (hitSoundBuffer.loadFromFile("res/impactSound.wav"))
 		hitSound.setBuffer(hitSoundBuffer);
+	else printf(" HIT ca load pas!");
+
+	if (killSoundBuffer.loadFromFile("res/killSound.wav"))
+		killSound.setBuffer(killSoundBuffer);
+	else printf(" kill ca load pas!");
 
 	if (lostSoundBuffer.loadFromFile("res/Lost.wav"))
 		lostSound.setBuffer(lostSoundBuffer);
+	else printf(" Lost ca load pas!");
+
 
 	if (mix.openFromFile("res/Light_It_Up.wav")) {
 		mix.play();
 		mix.setVolume(8.0f);
 		mix.setLoop(true);
-
 	}
 		
 }

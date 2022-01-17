@@ -243,6 +243,7 @@ int main() {
 		}
 
 
+
 		///// S H O O T /////
 		bool mouseLeftIsPressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
 		bool mouseIsReleased = (!mouseLeftIsPressed && mouseLeftWasPressed);
@@ -294,7 +295,7 @@ int main() {
 		
 		if (timer >= 5.0f ) {
 
-			for (size_t i = 0; i < 5; i++)
+			for (size_t i = 0; i < 8; i++)
 			{
 			sf::Vector2f randPos1(rand()%1200, rand()%700);
 			sf::Vector2f randPos2(rand() % 1200, rand() % 700);
@@ -307,7 +308,7 @@ int main() {
 				dxy = dir / dirLen;
 			}
 
-			dxy *= 60.0f * 3;
+			dxy *= 60.0f * 4;
 				
 				ennemy->create(randPos1.x, randPos1.y, dxy.x, dxy.y);
 			}

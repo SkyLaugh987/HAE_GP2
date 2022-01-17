@@ -12,6 +12,9 @@ public:
 	sf::Sound		hitSound;
 	sf::SoundBuffer hitSoundBuffer;
 
+	sf::Sound		killSound;
+	sf::SoundBuffer killSoundBuffer;
+
 	sf::Sound		laserShot;
 	sf::SoundBuffer laserShotBuffer;
 
