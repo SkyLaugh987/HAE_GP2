@@ -48,7 +48,7 @@ int main() {
 	float ScreenWidth = 1280;
 	float ScreenHeight = 720;
 
-	sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "BoingBoingShooter.exe");
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
