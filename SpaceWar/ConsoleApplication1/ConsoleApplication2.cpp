@@ -52,7 +52,6 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(ScreenWidth, ScreenHeight), "SFML works!");
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
-	ImGui::SFML::Init(window);
 
 
 	///// V A R I A B L E S /////
@@ -189,7 +188,7 @@ int main() {
 
 		while (window.pollEvent(event)) {
 
-			ImGui::SFML::ProcessEvent(window, event);
+
 
 			if (event.type == sf::Event::Closed)
 				window.close();
@@ -339,7 +338,7 @@ int main() {
 		healthPackTimer += dt;
 
 
-		ImGui::SFML::Update(window, sf::milliseconds((int)(dt * 1000)));
+
 		window.clear();
 
 		///// U P D A T E /////
@@ -371,11 +370,11 @@ int main() {
 			window.setPosition(winPos);
 		Game::shake--;
 
-		ImGui::SFML::Render(window);
+
 		window.display();
 		tExitFrame = getTimeStamp();
 
 	}
 	return 0;
-	ImGui::SFML::Shutdown();
+
 }
